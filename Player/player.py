@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (settings.Tilesize, settings.Tilesize))
         self.rect  = self.image.get_rect(topleft = position)
         # Setting the player hitbox
-        self.hitbox = self.rect.inflate(-26,-26)
+        self.hitbox = self.rect.inflate(-26*settings.scale,-26*settings.scale)
 # Variables used within the player class
         self.direction = pygame.math.Vector2()
         self.speed = 2

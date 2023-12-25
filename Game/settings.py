@@ -5,6 +5,7 @@ WIDTH = 1280
 HEIGTH = 720
 Tilesize = 96
 sprite_size = 32
+scale = Tilesize / sprite_size
 targetFPS = 144
 
 #World map for testing

@@ -17,6 +17,8 @@ class Game:
 #Defining the different elements in the game
         self.last_time = pygame.time.get_ticks()
         self.level = None
+        self.load_file = "Map Data\Test Map"
+        self.entry_point = "Center"
 
 # Function to calculate the time between frames(dt)
     def calculate_dt(self):
@@ -35,20 +37,26 @@ class Game:
 # Drawing the screen and updating it
             self.screen.fill('white')
             dt = self.calculate_dt()
-            if self.state == "menu":
+            # Runs the 
+            if self.state == "playing":
+                self.level.run(dt,self.clock)
+                self.state = "menu"
+            # Runs the main menu program on the screen.
+            elif self.state == "menu":
                 action = mainMenu(self.screen)
                 if action == "play":
                     self.state = "playing"
-                    if self.level is None:
-                        self.level = Level()
+                    if isinstance(self.load_file, str) and not self.level:
+                        # Code to execute if self.level is a string and it is empty                        
+                        self.level = Level(self.load_file, self.entry_point)
+                    elif self.level is None:
+                        # Code to execute if self.level is None
+                        # self.level = Level(self.load_file)
+                        pass
+                print(self.level)
                 if action == "quit":
                     pygame.quit()
                     sys.exit()
 
-            elif self.state == "playing":
-                # while True:
-                self.level.run(dt,self.clock)
-                self.state = "menu"
+            
             pygame.display.update()
-            print("hello")
-

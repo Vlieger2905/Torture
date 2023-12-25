@@ -1,23 +1,59 @@
-import pygame,sys
+import pygame,sys,os
 from pygame.sprite import Group
-from pytmx.util_pygame import load_pygame
 from Game import settings
 from .tile import *
 from Player import player
 from debug import *
+from .Camera import *
+from .loading_tmx_file import *
 
 class Level:
-    def __init__(self):
+    def __init__(self, level_map, entry_point):
 # Getting the display surface
         self.display_surface = pygame.display.get_surface()     
 # Sprite group setup
+        floor_image = self.get_files_by_extension(level_map, [".png"])
+        
         # Sprites that can be drawn on the screen
-        self.visible_sprites = CameraGroup()
+        self.visible_sprites = CameraGroup(floor_image)
         # Sprites that interact with the player
         self.obstacle_sprites = pygame.sprite.Group()
-# Creating player
-        self.player = player.Player((5240,3262), [self.visible_sprites], self.obstacle_sprites)
-        # self.create_map()
+        # Getting the sprite details out of the tmx file creating them
+        tmx_file = self.get_files_by_extension(level_map, [".tmx"])
+        tmx_data = load_tmx(tmx_file)
+        # Creating all the tiles in the tmx file Except the background that is a image
+        create_tiles(tmx_data, [self.visible_sprites, self.obstacle_sprites])
+        # Looping through the objects in the tmx files to find the corresponding point and the coordinates thereof to spawn in the player in the correct position
+        for obj in tmx_data.objects:
+            if obj.name == entry_point:
+                entry_point = (obj.x* settings.scale, obj.y* settings.scale)
+                break 
+        if entry_point is None or not isinstance(entry_point, tuple):
+            raise ValueError(f"No entry point found for name '{entry_point}' in the '{level_map}' folder.")    
+        # Creating player
+        self.player = player.Player(entry_point, [self.visible_sprites], self.obstacle_sprites)
+
+    def get_files_by_extension(self, folder_path, extensions):
+        matching_files = []
+
+        # Ensure folder path ends with a separator
+        folder_path = os.path.join(folder_path, "")
+
+        # Get a list of all items in the folder
+        items = os.listdir(folder_path)
+
+        for item in items:
+            item_path = os.path.join(folder_path, item)
+
+            # Check if the item is a file and has a matching extension
+            if os.path.isfile(item_path):
+                _, extension = os.path.splitext(item)
+                if extension.lower() in extensions:
+                    relative_path = os.path.relpath(item_path, folder_path)
+                    combined_path = os.path.join(folder_path, relative_path)
+                    matching_files.append(combined_path)
+
+        return matching_files[0]
 
     def create_map(self):
         for row_index, row in enumerate(settings.WORLD_MAP):
@@ -29,8 +65,7 @@ class Level:
                 if (col == ' '):
                     Grass((x,y), [self.visible_sprites])
                 if (col == 'p'):
-                    self.player = player.Player((x,y), [self.visible_sprites], self.obstacle_sprites)
-
+                    self.player = player.Player((x,y), [self.visible_sprites, self.obstacle_sprites])
 
     def run(self, dt, clock):
         while True:
@@ -44,33 +79,6 @@ class Level:
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
-            debug(self.player.rect.center)
+            debug(self.player.rect.topleft)
             pygame.display.update()
             clock.tick(settings.targetFPS)
-
-class CameraGroup(pygame.sprite.Group):
-    def __init__(self):
-# general setup
-        super().__init__()
-        self.display_surface = pygame.display.get_surface()
-        self.display_WIDTH = self.display_surface.get_size()[0] // 2
-        self.display_HEIGTH = self.display_surface.get_size()[1] // 2
-        self.offset = pygame.math.Vector2()
-
-# Creating the floor
-        floor_map = pygame.image.load('Map Data\\Test Map\\testMap.png').convert()
-        floor_map_size = floor_map.get_size()
-        self.floor_surface = pygame.transform.scale(floor_map, (floor_map_size[0] / settings.sprite_size * settings.Tilesize,floor_map_size[1] / settings.sprite_size * settings.Tilesize ))
-        self.floor_rect = self.floor_surface.get_rect(topleft = (0,0))
-# Drawing the sprites in the group
-    def custom_draw(self,player):
-        self.offset.x = player.rect.centerx - self.display_WIDTH
-        self.offset.y = player.rect.centery - self.display_HEIGTH
-
-# Drawing the floor
-        floor_offset = self.floor_rect.topleft - self.offset
-        self.display_surface.blit(self.floor_surface, floor_offset)
-
-        for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
-            offset_position = sprite.rect.topleft - self.offset
-            self.display_surface.blit(sprite.image, offset_position)
