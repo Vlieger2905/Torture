@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = self.rect.inflate(-26*settings.scale,-26*settings.scale)
 # Variables used within the player class
         self.direction = pygame.math.Vector2()
-        self.speed = 2
+        self.speed = 4
         self.obstacle_sprites = obstacle_sprites
 
     def input(self):
