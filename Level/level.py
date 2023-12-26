@@ -6,6 +6,7 @@ from Player import player
 from debug import *
 from .Camera import *
 from .loading_tmx_file import *
+from .load_obj import *
 
 class Level:
     def __init__(self, level_map, entry_point):
@@ -18,20 +19,19 @@ class Level:
         self.visible_sprites = CameraGroup(floor_image)
         # Sprites that interact with the player
         self.obstacle_sprites = pygame.sprite.Group()
+        self.exit = pygame.sprite.Group()
+        self.exit_points = pygame.sprite.Group()
         # Getting the sprite details out of the tmx file creating them
-        tmx_file = self.get_files_by_extension(level_map, [".tmx"])
-        tmx_data = load_tmx(tmx_file)
+        self.tmx_file = self.get_files_by_extension(level_map, [".tmx"])
+        self.tmx_data = load_tmx(self.tmx_file)
+        # Creating the exit points and hitboxes on the map
+        get_exit(self.tmx_data, self.exit_points)
         # Creating all the tiles in the tmx file Except the background that is a image
-        create_tiles(tmx_data, [self.visible_sprites, self.obstacle_sprites])
-        # Looping through the objects in the tmx files to find the corresponding point and the coordinates thereof to spawn in the player in the correct position
-        for obj in tmx_data.objects:
-            if obj.name == entry_point:
-                entry_point = (obj.x* settings.scale, obj.y* settings.scale)
-                break 
-        if entry_point is None or not isinstance(entry_point, tuple):
-            raise ValueError(f"No entry point found for name '{entry_point}' in the '{level_map}' folder.")    
+        create_tiles(self.tmx_data, [self.visible_sprites, self.obstacle_sprites])
+
         # Creating player
-        self.player = player.Player(entry_point, [self.visible_sprites], self.obstacle_sprites)
+        entry_point = get_spawnpoint(self.tmx_data, entry_point, level_map)
+        self.player = player.Player(entry_point, [self.visible_sprites], self.obstacle_sprites, self.exit_points)
 
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
@@ -55,18 +55,6 @@ class Level:
 
         return matching_files[0]
 
-    def create_map(self):
-        for row_index, row in enumerate(settings.WORLD_MAP):
-            for col_index, col in enumerate(row):
-                x = col_index * settings.Tilesize
-                y = row_index * settings.Tilesize
-                if (col == 'x'):
-                    Wall((x,y), [self.visible_sprites, self.obstacle_sprites]) 
-                if (col == ' '):
-                    Grass((x,y), [self.visible_sprites])
-                if (col == 'p'):
-                    self.player = player.Player((x,y), [self.visible_sprites, self.obstacle_sprites])
-
     def run(self, dt, clock):
         while True:
             for event in pygame.event.get():
@@ -74,8 +62,7 @@ class Level:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    print("Escape")
-                    break
+                    return
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)

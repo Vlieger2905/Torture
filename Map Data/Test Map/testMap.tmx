@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="128" height="80" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="23">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="128" height="80" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="25">
  <editorsettings>
   <export target="../Sprites/test/test.csv" format="csv"/>
  </editorsettings>
@@ -281,7 +281,7 @@
  <objectgroup id="11" name="Exitpoint">
   <object id="19" name="TestWest" type="Exitpoint" x="896" y="992" width="96" height="192"/>
   <object id="20" name="TestSouth" type="Exitpoint" x="1664" y="1984" width="160" height="96"/>
-  <object id="21" name="TestNorth" type="Exitpoint" x="2144" y="416" width="224" height="96"/>
+  <object id="21" name="TestNorth" type="Exitpoint" x="2176" y="416" width="160.002" height="96"/>
   <object id="22" name="TestEast" type="Exitpoint" x="3104" y="992" width="96" height="192"/>
  </objectgroup>
 </map>

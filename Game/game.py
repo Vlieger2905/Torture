@@ -18,7 +18,7 @@ class Game:
         self.last_time = pygame.time.get_ticks()
         self.level = None
         self.load_file = "Map Data\Test Map"
-        self.entry_point = "Center"
+        self.entry_point = "West"
 
 # Function to calculate the time between frames(dt)
     def calculate_dt(self):
@@ -51,12 +51,10 @@ class Game:
                         self.level = Level(self.load_file, self.entry_point)
                     elif self.level is None:
                         # Code to execute if self.level is None
-                        # self.level = Level(self.load_file)
-                        pass
-                print(self.level)
+                        raise ValueError("No level instatiated.")
+                    else:
+                        self.level = Level(self.load_file, self.entry_point)
                 if action == "quit":
                     pygame.quit()
                     sys.exit()
-
-            
             pygame.display.update()

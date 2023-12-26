@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pytmx.util_pygame import load_pygame
+from Level import tile
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, pos, surf, groups):
@@ -17,8 +18,11 @@ except Exception as e:
     print("Error loading TMX file:", e)
     sys.exit()
 
+exit_points = pygame.sprite.Group
+exits = []
 for obj in tmx_data.objects:
-    print(obj.type, obj.name)
+    if obj.type == "Exitpoint":
+        exits.append(tile.Exit(exit_points,obj))
     
 # for item in tmx_data.visible_layers:
 #     if item.name == "Collision Barriers":
@@ -50,6 +54,7 @@ size = 16
 #             sys.exit()
 
 #     screen.fill('black')
-#     sprite_group.draw(screen)
+#     for rects in exits:
+#         pygame.draw.rect(screen, (0, 0, 255), rects, 2)
 
 #     pygame.display.update()
