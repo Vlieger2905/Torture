@@ -17,7 +17,7 @@ class Game:
 #Defining the different elements in the game
         self.last_time = pygame.time.get_ticks()
         self.level = None
-        self.load_file = "Map Data\Test Map"
+        self.load_map = "Map Data\Test Center"
         self.entry_point = "West"
 
 # Function to calculate the time between frames(dt)
@@ -37,23 +37,33 @@ class Game:
 # Drawing the screen and updating it
             self.screen.fill('white')
             dt = self.calculate_dt()
-            # Runs the 
+            
+            
+            # Runs the current level and returns the next level data
             if self.state == "playing":
-                self.level.run(dt,self.clock)
-                self.state = "menu"
+                if self.level is None:
+                    self.level = self.level = Level(self.load_map, self.entry_point)
+                next_level =self.level.run(dt,self.clock)
+                # print(next_level)
+                self.level = None
+                self.load_map = next_level[0]
+                self.entry_point = next_level[1]
+                
+
+
             # Runs the main menu program on the screen.
             elif self.state == "menu":
                 action = mainMenu(self.screen)
                 if action == "play":
                     self.state = "playing"
-                    if isinstance(self.load_file, str) and not self.level:
+                    if isinstance(self.load_map, str) and not self.level:
                         # Code to execute if self.level is a string and it is empty                        
-                        self.level = Level(self.load_file, self.entry_point)
+                        self.level = Level(self.load_map, self.entry_point)
                     elif self.level is None:
                         # Code to execute if self.level is None
                         raise ValueError("No level instatiated.")
                     else:
-                        self.level = Level(self.load_file, self.entry_point)
+                        self.level = Level(self.load_map, self.entry_point)
                 if action == "quit":
                     pygame.quit()
                     sys.exit()

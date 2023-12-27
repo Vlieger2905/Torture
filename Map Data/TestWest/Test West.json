@@ -1,0 +1,9 @@
+{
+    "exits": [
+      {
+        "name": "TestWest",
+        "next_level": "Map Data\\Test Center",
+        "spawn_point": "West"
+      }
+    ]
+  }

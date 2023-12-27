@@ -7,6 +7,7 @@ from debug import *
 from .Camera import *
 from .loading_tmx_file import *
 from .load_obj import *
+from .load_json import *
 
 class Level:
     def __init__(self, level_map, entry_point):
@@ -14,7 +15,6 @@ class Level:
         self.display_surface = pygame.display.get_surface()     
 # Sprite group setup
         floor_image = self.get_files_by_extension(level_map, [".png"])
-        
         # Sprites that can be drawn on the screen
         self.visible_sprites = CameraGroup(floor_image)
         # Sprites that interact with the player
@@ -24,6 +24,7 @@ class Level:
         # Getting the sprite details out of the tmx file creating them
         self.tmx_file = self.get_files_by_extension(level_map, [".tmx"])
         self.tmx_data = load_tmx(self.tmx_file)
+        self.json_file = self.get_files_by_extension(level_map , [".json"])
         # Creating the exit points and hitboxes on the map
         get_exit(self.tmx_data, self.exit_points)
         # Creating all the tiles in the tmx file Except the background that is a image
@@ -66,6 +67,10 @@ class Level:
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
-            debug(self.player.rect.topleft)
+            exit = self.player.collision_exit()
+            if exit is not None:
+                next_level = load_exit(self.json_file, exit)
+                return next_level
+            # debug()
             pygame.display.update()
             clock.tick(settings.targetFPS)

@@ -13,7 +13,7 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = self.rect.inflate(-26*settings.scale,-26*settings.scale)
 # Variables used within the player class
         self.direction = pygame.math.Vector2()
-        self.speed = 2
+        self.speed = 5
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits
 
@@ -47,17 +47,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.center=self.hitbox.center
 
     def collision(self, direction):
-        for obj in self.exit_rects:
-                if obj.hitbox.colliderect(self.hitbox):
-                    print(obj.name)
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.x > 0: #Moving to the rigth
                         self.hitbox.right = sprite.hitbox.left
                     if self.direction.x < 0: #Moving to the left
-                        self.hitbox.left = sprite.hitbox.right
-            
+                        self.hitbox.left = sprite.hitbox.right           
 
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
@@ -67,7 +63,15 @@ class Player(pygame.sprite.Sprite):
                     if self.direction.y < 0: #Moving up
                         self.hitbox.top = sprite.hitbox.bottom
 
+    def collision_exit(self):
+        for obj in self.exit_rects:
+                if obj.hitbox.colliderect(self.hitbox):
+                    return obj.name
+
     def update(self,fps):
         self.input()
         self.move(self.speed,fps)
+        # exit = self.collision_exit()
+        # if exit is not None:
+        #     print(exit)
         
