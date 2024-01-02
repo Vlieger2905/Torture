@@ -1,19 +1,20 @@
 import pygame,sys,os
 from pygame.sprite import Group
 from Game import settings
+from Game import dt as detalTime
 from .tile import *
 from Player import player
 from debug import *
 from .Camera import *
 from .loading_tmx_file import *
-from .load_obj import *
+from . import load_obj 
 from .load_json import *
 
 class Level:
     def __init__(self, level_map, entry_point):
-# Getting the display surface
-        self.display_surface = pygame.display.get_surface()     
-# Sprite group setup
+        # Getting the display surface
+        self.display_surface = pygame.display.get_surface()
+        # Sprite group setup
         floor_image = self.get_files_by_extension(level_map, [".png"])
         # Sprites that can be drawn on the screen
         self.visible_sprites = CameraGroup(floor_image)
@@ -26,12 +27,12 @@ class Level:
         self.tmx_data = load_tmx(self.tmx_file)
         self.json_file = self.get_files_by_extension(level_map , [".json"])
         # Creating the exit points and hitboxes on the map
-        get_exit(self.tmx_data, self.exit_points)
+        load_obj.get_exit(self.tmx_data, self.exit_points)
         # Creating all the tiles in the tmx file Except the background that is a image
         create_tiles(self.tmx_data, [self.visible_sprites, self.obstacle_sprites])
 
         # Creating player
-        entry_point = get_spawnpoint(self.tmx_data, entry_point, level_map)
+        entry_point = load_obj.get_spawnpoint(self.tmx_data, entry_point, level_map)
         self.player = player.Player(entry_point, [self.visible_sprites], self.obstacle_sprites, self.exit_points)
 
     def get_files_by_extension(self, folder_path, extensions):
@@ -56,8 +57,10 @@ class Level:
 
         return matching_files[0]
 
-    def run(self, dt, clock):
+    def run(self, clock):
+        last_time = pygame.time.get_ticks()
         while True:
+            last_time,dt = detalTime.calculate_dt(last_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -72,8 +75,7 @@ class Level:
             if exit is not None:
                 next_level = load_exit(self.json_file, exit)
                 return next_level
-            
-            clock.tick()
-            debug(clock.get_fps())
-            clock.tick(settings.targetFPS)
+        
+            debug(self.player.rect.topleft)
+            clock.tick(settings.FPS)
             pygame.display.update()
