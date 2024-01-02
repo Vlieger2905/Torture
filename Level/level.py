@@ -67,10 +67,13 @@ class Level:
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
+            # Checking if the player collides with a exit point on the map and the returns the next level and the point the player should spawn
             exit = self.player.collision_exit()
             if exit is not None:
                 next_level = load_exit(self.json_file, exit)
                 return next_level
-            # debug()
-            pygame.display.update()
+            
+            clock.tick()
+            debug(clock.get_fps())
             clock.tick(settings.targetFPS)
+            pygame.display.update()

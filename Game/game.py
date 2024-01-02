@@ -8,19 +8,18 @@ from .mainMenu import *
 
 class Game:
     def __init__(self):
-#Setting up the game class 
+        #Setting up the game class 
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
         pygame.display.set_caption('Torture')
         self.clock =  pygame.time.Clock()
         self.state = "menu"
-#Defining the different elements in the game
         self.last_time = pygame.time.get_ticks()
         self.level = None
         self.load_map = "Map Data\Test Center"
         self.entry_point = "West"
 
-# Function to calculate the time between frames(dt)
+    # Function to calculate the time between frames(dt)
     def calculate_dt(self):
         current_time = pygame.time.get_ticks() / 1000.0
         dt = current_time - self.last_time
@@ -34,11 +33,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-# Drawing the screen and updating it
+            # Drawing the screen and updating it
             self.screen.fill('white')
             dt = self.calculate_dt()
-            
-            
             # Runs the current level and returns the next level data
             if self.state == "playing":
                 if self.level is None:
@@ -48,8 +45,6 @@ class Game:
                 self.level = None
                 self.load_map = next_level[0]
                 self.entry_point = next_level[1]
-                
-
 
             # Runs the main menu program on the screen.
             elif self.state == "menu":
@@ -68,3 +63,6 @@ class Game:
                     pygame.quit()
                     sys.exit()
             pygame.display.update()
+            self.clock.tick()
+            debug(self.clock.get_fps())
+            self.clock.tick(settings.targetFPS)

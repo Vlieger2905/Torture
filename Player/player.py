@@ -13,12 +13,14 @@ class Player(pygame.sprite.Sprite):
         self.hitbox = self.rect.inflate(-26*settings.scale,-26*settings.scale)
 # Variables used within the player class
         self.direction = pygame.math.Vector2()
-        self.speed = 5
+        self.speed = 1
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits
 
     def input(self):
         keys = pygame.key.get_pressed()
+        self.direction.y = 0
+        self.direction.x = 0
 # Vertical movement of the player input
         if keys[pygame.K_w]:
             self.direction.y = -1
@@ -68,10 +70,7 @@ class Player(pygame.sprite.Sprite):
                 if obj.hitbox.colliderect(self.hitbox):
                     return obj.name
 
-    def update(self,fps):
+    def update(self,dt):
         self.input()
-        self.move(self.speed,fps)
-        # exit = self.collision_exit()
-        # if exit is not None:
-        #     print(exit)
+        self.move(self.speed,dt)
         
