@@ -1,0 +1,25 @@
+PixelArt:
+    water
+    enemies
+    npc
+    equipement
+    pause Menu
+    Inventory
+    houses
+    
+
+Programming:
+    Pause Menu
+        Settings
+        Save
+    Inventory
+    PLayer stats
+    Enemy AI
+    Enemy spawn
+    Save/load
+    Combat system
+    Npc system
+
+Game ideas:
+    Make a list of every time a player died. That saves the location and cause of the death together with the date and time and then at the end of the game there is a monument or graveyard with all of the players attempts
+        

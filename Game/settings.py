@@ -6,4 +6,4 @@ HEIGTH = 720
 Tilesize = 96
 sprite_size = 32
 scale = Tilesize / sprite_size
-targetFPS = 60
+targetFPS = 6

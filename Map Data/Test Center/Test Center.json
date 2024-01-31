@@ -8,7 +8,7 @@
       {
         "name": "TestNorth",
         "next_level": "Map Data\\TestNorth",
-        "spawn_point": "TestWest"
+        "spawn_point": "South"
       },
       {
         "name": "TestSouth",

@@ -2,7 +2,7 @@ import pygame, sys
 from . import settings
 import debug
 from Level import level
-from .mainMenu import *
+from .Menu.mainMenu import *
 from .dt import *
 
 
@@ -10,14 +10,14 @@ class Game:
     def __init__(self):
         #Setting up the game class 
         pygame.init()
-        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH))
+        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
         pygame.display.set_caption('Torture')
         self.clock =  pygame.time.Clock()
         self.state = "menu"
         self.last_time = pygame.time.get_ticks()
         self.level = None
         self.load_map = "Map Data\Test Center"
-        self.entry_point = "West"
+        self.entry_point = "North"
 
 
     def Run(self):
@@ -38,9 +38,12 @@ class Game:
                 if self.level is None:
                     self.level = level.Level(self.load_map, self.entry_point)
                 next_level =self.level.run(self.clock)
-                self.level = None
-                self.load_map = next_level[0]
-                self.entry_point = next_level[1]
+                if next_level == "main menu":
+                    self.state = "menu"
+                else:
+                    self.level = None
+                    self.load_map = next_level[0]
+                    self.entry_point = next_level[1]
 
             # Runs the main menu program on the screen.
             elif self.state == "menu":

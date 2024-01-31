@@ -2,6 +2,7 @@ import pygame,sys,os
 from pygame.sprite import Group
 from Game import settings
 from Game import dt as detalTime
+from Game.Menu.pauseMenu import *
 from .tile import *
 from Player import player
 from debug import *
@@ -66,7 +67,14 @@ class Level:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    return
+                    pauseMenu, last_time = pause_menu(self.display_surface, clock, last_time)
+                    if pauseMenu == "play":
+                        continue
+                    elif pauseMenu == "quit":
+                        pygame.quit()
+                        sys.exit()
+                    elif pauseMenu == "return to main menu":
+                        return "main menu"
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
