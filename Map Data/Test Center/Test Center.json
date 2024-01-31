@@ -1,0 +1,24 @@
+{
+    "exits": [
+      {
+        "name": "TestWest",
+        "next_level": "Map Data\\TestWest",
+        "spawn_point": "West"
+      },
+      {
+        "name": "TestNorth",
+        "next_level": "Map Data\\TestNorth",
+        "spawn_point": "South"
+      },
+      {
+        "name": "TestSouth",
+        "next_level": "Map Data\\TestSouth",
+        "spawn_point": "TestSouth"
+      },
+      {
+        "name": "TestEast",
+        "next_level": "Map Data\\TestEast",
+        "spawn_point": "TestEast"
+      }
+    ]
+  }
