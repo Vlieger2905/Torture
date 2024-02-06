@@ -18,44 +18,46 @@ class Player(pygame.sprite.Sprite):
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits 
         self.first_frame = True
-
+        
+# loading the stats of the charachter into the playerclass
+        
         # # Player stats
-        # level = initial_stats.get("level", 1)
+        # level = stats.get("level", 1)
 
         # # Player innate stats
-        # self.Might = initial_stats.get("Might", 14)
-        # self.Agility = initial_stats.get("Agility", 7)
-        # self.Mind = initial_stats.get("Mind", 3)
-        # self.Vitality = initial_stats.get("Vitality", 12)
-        # self.Fortitude = initial_stats.get("Fortitude", 6)
+        # self.Might = stats.get("Might", 14)
+        # self.Agility = stats.get("Agility", 7)
+        # self.Mind = stats.get("Mind", 3)
+        # self.Vitality = stats.get("Vitality", 12)
+        # self.Fortitude = stats.get("Fortitude", 6)
 
         # # Combat proficiency
         #     # Melee
-        # self.Sword_proficiency = initial_stats.get("Sword_proficiency", 1)
-        # self.Lance_proficiency = initial_stats.get("Lance_proficiency", 1)
-        # self.Axe_proficiency = initial_stats.get("Axe_proficiency", 1)
-        # self.Maul_proficiency = initial_stats.get("Maul_proficiency", 1)
-        # self.Dagger_proficiency = initial_stats.get("Dagger_proficiency", 1)
-        # self.Unarmed_proficiency = initial_stats.get("Unarmed_proficiency", 1)
+        # self.Sword_proficiency = stats.get("Sword_proficiency", 1)
+        # self.Lance_proficiency = stats.get("Lance_proficiency", 1)
+        # self.Axe_proficiency = stats.get("Axe_proficiency", 1)
+        # self.Maul_proficiency = stats.get("Maul_proficiency", 1)
+        # self.Dagger_proficiency = stats.get("Dagger_proficiency", 1)
+        # self.Unarmed_proficiency = stats.get("Unarmed_proficiency", 1)
         #     # Ranged
-        # self.Bow_proficiency = initial_stats.get("Bow_proficiency", 1)
-        # self.Crossbow_proficiency = initial_stats.get("Crossbow_proficiency", 1)
-        # self.Thrown_proficiency = initial_stats.get("Thrown_proficiency", 1)
-        # self.Firearms_proficiency = initial_stats.get("Firearms_proficiency", 1)
+        # self.Bow_proficiency = stats.get("Bow_proficiency", 1)
+        # self.Crossbow_proficiency = stats.get("Crossbow_proficiency", 1)
+        # self.Thrown_proficiency = stats.get("Thrown_proficiency", 1)
+        # self.Firearms_proficiency = stats.get("Firearms_proficiency", 1)
 
         #     # Mind Magic
-        # self.Light_proficiency = initial_stats.get("Light_proficiency", 0)
-        # self.Dark_proficiency = initial_stats.get("Dark_proficiency", 0)
-        # self.Soul_proficiency = initial_stats.get("Soul_proficiency", 0)
-        # self.Spirit_proficiency = initial_stats.get("Spirit_proficiency", 0)
+        # self.Light_proficiency = stats.get("Light_proficiency", 0)
+        # self.Dark_proficiency = stats.get("Dark_proficiency", 0)
+        # self.Soul_proficiency = stats.get("Soul_proficiency", 0)
+        # self.Spirit_proficiency = stats.get("Spirit_proficiency", 0)
 
         #     # Fortitude Magic
-        # self.Fire_proficiency = initial_stats.get("Fire_proficiency", 0)
-        # self.Earth_proficiency = initial_stats.get("Earth_proficiency", 0)
-        # self.Water_proficiency = initial_stats.get("Water_proficiency", 0)
-        # self.Air_proficiency = initial_stats.get("Air_proficiency", 0)
-        # self.Plants_proficiency = initial_stats.get("Plants_proficiency", 0)
-        # self.Lightning_proficiency = initial_stats.get("Lightning_proficiency", 0)
+        # self.Fire_proficiency = stats.get("Fire_proficiency", 0)
+        # self.Earth_proficiency = stats.get("Earth_proficiency", 0)
+        # self.Water_proficiency = stats.get("Water_proficiency", 0)
+        # self.Air_proficiency = stats.get("Air_proficiency", 0)
+        # self.Plants_proficiency = stats.get("Plants_proficiency", 0)
+        # self.Lightning_proficiency = stats.get("Lightning_proficiency", 0)
 
 
     def get_stats(self):

@@ -42,7 +42,6 @@ class Game:
                     self.level = level.Level(self.load_map, self.entry_point)
                 
                 next_level =self.level.run(self.clock)
-                print(next_level)
                 
                 if next_level == "main menu":
                     self.state = "menu"
