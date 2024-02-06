@@ -9,7 +9,7 @@ from debug import *
 from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
-from .load_json import *
+from .load_json import load_exit
 
 class Level:
     def __init__(self, level_map, entry_point):
@@ -74,7 +74,8 @@ class Level:
                         pygame.quit()
                         sys.exit()
                     elif pauseMenu == "return to main menu":
-                        return "main menu"
+                        player_stats = self.player.get_stats()
+                        return "main menu", player_stats
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
@@ -84,6 +85,5 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level
         
-            debug(self.player.rect.topleft)
             clock.tick(settings.FPS)
             pygame.display.update()

@@ -10,14 +10,17 @@ class Game:
     def __init__(self):
         #Setting up the game class 
         pygame.init()
-        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
+        # self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH))
         pygame.display.set_caption('Torture')
         self.clock =  pygame.time.Clock()
         self.state = "menu"
         self.last_time = pygame.time.get_ticks()
         self.level = None
-        self.load_map = "Map Data\Test Center"
+        self.load_map = "Map Data\\Test Center"
         self.entry_point = "North"
+        self.player_stats = {}
+
 
 
     def Run(self):
@@ -37,7 +40,10 @@ class Game:
             if self.state == "playing":
                 if self.level is None:
                     self.level = level.Level(self.load_map, self.entry_point)
+                
                 next_level =self.level.run(self.clock)
+                print(next_level)
+                
                 if next_level == "main menu":
                     self.state = "menu"
                 else:
