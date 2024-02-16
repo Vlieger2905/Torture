@@ -4,21 +4,22 @@ from .modifiers import *
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
-    def __init__(self,position, groups, obstacle_sprites, exits):
-        super().__init__(groups)
+    def __init__(self):
+        super().__init__()
+        # super().__init__(groups)
         self.image = pygame.image.load('Sprites\\Player\\Village boy #1.png').convert_alpha()
+        # Creating the rect of the player
+        self.rect  = self.image.get_rect()
+        # Setting the player hitbox
+        self.hitbox = self.rect.copy()
         # Scale the image to 32x32 pixels
         self.image = pygame.transform.scale(self.image, (settings.Tilesize, settings.Tilesize))
-        self.rect  = self.image.get_rect(topleft = position)
-        # Setting the player hitbox
-        self.hitbox = self.rect.inflate(-10*settings.scale,-10*settings.scale)
         # Variables used within the player class
         self.direction = pygame.math.Vector2()
         self.base_speed = base_speed
-        self.obstacle_sprites = obstacle_sprites
-        self.exit_rects = exits 
         self.first_frame = True
         
+
 # loading the stats of the charachter into the playerclass
         
         # # Player stats
@@ -59,6 +60,14 @@ class Player(pygame.sprite.Sprite):
         # self.Plants_proficiency = stats.get("Plants_proficiency", 0)
         # self.Lightning_proficiency = stats.get("Lightning_proficiency", 0)
 
+
+    def spawn(self,spawn_position, obstacle_sprites, exits):
+        self.rect.x, self.rect.y = spawn_position
+        self.hitbox.center = self.rect.center 
+        self.obstacle_sprites = obstacle_sprites
+        self.exit_rects = exits 
+        self.first_frame = True
+        
 
     def get_stats(self):
         stats = {
@@ -121,8 +130,8 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
         
-        if keys[pygame.K_b]:
-            self.Agility +=20
+        # if keys[pygame.K_b]:
+        #     self.Agility +=20
     
     def move(self, dt):
         # If the player is moving making sure that the velocity stays the same and that the player is not moving faster when moving diagonally
@@ -135,7 +144,7 @@ class Player(pygame.sprite.Sprite):
         self.collision('horizontal')
         self.hitbox.y +=move_vector.y
         self.collision('vertical')
-        self.rect.center=self.hitbox.center
+
 
     # Checks for the collision of the player hitbox with the obstacles
     def collision(self, direction):
@@ -144,7 +153,7 @@ class Player(pygame.sprite.Sprite):
                 if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.x > 0: #Moving to the rigth
                         self.hitbox.right = sprite.hitbox.left
-                    if self.direction.x < 0: #Moving to the left
+                    elif self.direction.x < 0: #Moving to the left
                         self.hitbox.left = sprite.hitbox.right           
 
         if direction == 'vertical':
@@ -152,7 +161,7 @@ class Player(pygame.sprite.Sprite):
                 if sprite.hitbox.colliderect(self.hitbox):
                     if self.direction.y > 0: #Moving down
                         self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction.y < 0: #Moving up
+                    elif self.direction.y < 0: #Moving up
                         self.hitbox.top = sprite.hitbox.bottom
 
     # checks for the collision between the player hitbox and the exit hitboxes
@@ -165,5 +174,9 @@ class Player(pygame.sprite.Sprite):
         if self.first_frame is False:
             self.input()
             self.move(dt)
+            self.rect.center=self.hitbox.center
+            if self.rect != self.hitbox:
+                print("help")
         else:
             self.first_frame = False
+            

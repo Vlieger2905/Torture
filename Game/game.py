@@ -2,6 +2,7 @@ import pygame, sys
 from . import settings
 import debug
 from Level import level
+from Player import player
 from .Menu.mainMenu import *
 from .dt import *
 
@@ -19,7 +20,7 @@ class Game:
         self.level = None
         self.load_map = "Map Data\\Test Center"
         self.entry_point = "North"
-        self.player_stats = {}
+        self.player = player.Player()
 
 
 
@@ -39,10 +40,9 @@ class Game:
             # Runs the current level and returns the next level data
             if self.state == "playing":
                 if self.level is None:
-                    self.level = level.Level(self.load_map, self.entry_point)
+                    self.level = level.Level(self.load_map, self.entry_point, self.player)
                 
-                next_level =self.level.run(self.clock)
-                
+                next_level, self.player =self.level.run(self.clock)
                 if next_level == "main menu":
                     self.state = "menu"
                 else:
@@ -57,12 +57,12 @@ class Game:
                     self.state = "playing"
                     if isinstance(self.load_map, str) and not self.level:
                         # Code to execute if self.level is a string and it is empty                        
-                        self.level = level.Level(self.load_map, self.entry_point)
+                        self.level = level.Level(self.load_map, self.entry_point, self.player)
                     elif self.level is None:
                         # Code to execute if self.level is None
                         raise ValueError("No level instatiated.")
                 if action == "quit":
                     pygame.quit()
                     sys.exit()
-
+            
             pygame.display.update()
