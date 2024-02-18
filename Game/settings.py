@@ -1,6 +1,6 @@
 # General Pygame settings:
     #Window settings
-FPS = 60 # Setting the frames per second to a certain amount
+FPS = 30 # Setting the frames per second to a certain amount
 WIDTH = 1280
 HEIGTH = 720
 Tilesize = 96

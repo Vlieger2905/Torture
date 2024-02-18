@@ -9,10 +9,10 @@ from debug import *
 from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
-from .load_json import *
+from .load_json import load_exit
 
 class Level:
-    def __init__(self, level_map, entry_point):
+    def __init__(self, level_map, entry_point, player):
         # Getting the display surface
         self.display_surface = pygame.display.get_surface()
         # Sprite group setup
@@ -34,7 +34,10 @@ class Level:
 
         # Creating player
         entry_point = load_obj.get_spawnpoint(self.tmx_data, entry_point, level_map)
-        self.player = player.Player(entry_point, [self.visible_sprites], self.obstacle_sprites, self.exit_points)
+        self.player = player
+        self.player.spawn(entry_point,self.obstacle_sprites, self.exit_points)
+        # Add player to visible_sprites group
+        self.visible_sprites.add(self.player)
 
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
@@ -74,7 +77,7 @@ class Level:
                         pygame.quit()
                         sys.exit()
                     elif pauseMenu == "return to main menu":
-                        return "main menu"
+                        return "main menu", self.player
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
@@ -82,8 +85,8 @@ class Level:
             exit = self.player.collision_exit()
             if exit is not None:
                 next_level = load_exit(self.json_file, exit)
-                return next_level
-        
-            debug(self.player.rect.topleft)
+                return next_level, self.player
+
+            debug(self.player.world_speed)
             clock.tick(settings.FPS)
             pygame.display.update()
