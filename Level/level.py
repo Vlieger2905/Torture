@@ -38,9 +38,6 @@ class Level:
         self.player.spawn(entry_point,self.obstacle_sprites, self.exit_points)
         # Add player to visible_sprites group
         self.visible_sprites.add(self.player)
-        # Add player to obstacle_sprites group
-        # self.obstacle_sprites.add(self.player)
-        # .Player(entry_point, [self.visible_sprites], self.obstacle_sprites, self.exit_points)
 
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
@@ -90,6 +87,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            debug(self.player.direction)
+            debug(self.player.world_speed)
             clock.tick(settings.FPS)
             pygame.display.update()

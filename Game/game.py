@@ -20,9 +20,20 @@ class Game:
         self.level = None
         self.load_map = "Map Data\\Test Center"
         self.entry_point = "North"
-        self.player = player.Player()
+        stats = {}
+        self.player = player.Player(stats)
 
-
+    def execute_level(self):
+        if self.level is None:
+            self.level = level.Level(self.load_map, self.entry_point, self.player)
+        print("done1")        
+        next_level, self.player =self.level.run(self.clock)
+        if next_level == "main menu":
+            self.state = "menu"
+        else:
+            self.level = None
+            self.load_map = next_level[0]
+            self.entry_point = next_level[1]
 
     def Run(self):
         while True:
@@ -40,8 +51,7 @@ class Game:
             # Runs the current level and returns the next level data
             if self.state == "playing":
                 if self.level is None:
-                    self.level = level.Level(self.load_map, self.entry_point, self.player)
-                
+                    self.level = level.Level(self.load_map, self.entry_point, self.player)       
                 next_level, self.player =self.level.run(self.clock)
                 if next_level == "main menu":
                     self.state = "menu"
@@ -53,6 +63,7 @@ class Game:
             # Runs the main menu program on the screen.
             elif self.state == "menu":
                 action = mainMenu(self.screen)
+                # When the play button gets pressed 
                 if action == "play":
                     self.state = "playing"
                     if isinstance(self.load_map, str) and not self.level:
@@ -64,5 +75,5 @@ class Game:
                 if action == "quit":
                     pygame.quit()
                     sys.exit()
-            
+
             pygame.display.update()
