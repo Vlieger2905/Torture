@@ -8,12 +8,16 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         # super().__init__(groups)
         self.image = pygame.image.load('Sprites\\Player\\Village boy #1.png').convert_alpha()
+        # Scale the image to 32x32 pixels
+        self.image = pygame.transform.scale(self.image, (settings.Tilesize, settings.Tilesize))
         # Creating the rect of the player
         self.rect  = self.image.get_rect()
         # Setting the player hitbox
         self.hitbox = self.rect.copy()
-        # Scale the image to 32x32 pixels
-        self.image = pygame.transform.scale(self.image, (settings.Tilesize, settings.Tilesize))
+        # Rescaling the hitbox of the player to fit the player character
+        self.hitbox= self.hitbox.inflate(-(self.hitbox.width * 0.45),-(self.hitbox.height * 0.95))
+        self.hitbox.centerx = self.rect.centerx
+        self.hitbox.centery = self.rect.bottom + (self.rect.height * 0.05)
         # Variables used within the player class
         self.direction = pygame.math.Vector2()
         self.base_speed = base_speed
@@ -62,8 +66,8 @@ class Player(pygame.sprite.Sprite):
 
 
     def spawn(self,spawn_position, obstacle_sprites, exits):
-        self.rect.x, self.rect.y = spawn_position
-        self.hitbox.center = self.rect.center 
+        self.hitbox.x, self.hitbox.y = spawn_position
+        self.aligment() 
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits 
         self.first_frame = True
@@ -170,13 +174,15 @@ class Player(pygame.sprite.Sprite):
                 if obj.hitbox.colliderect(self.hitbox):
                     return obj.name
 
+    def aligment(self):
+        self.rect.centerx = self.hitbox.centerx
+        self.rect.centery = self.hitbox.centery - (self.rect.height * 0.3)
+
     def update(self,dt):
         if self.first_frame is False:
             self.input()
             self.move(dt)
-            self.rect.center=self.hitbox.center
-            if self.rect != self.hitbox:
-                print("help")
+            self.aligment()
         else:
             self.first_frame = False
             

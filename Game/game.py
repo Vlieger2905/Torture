@@ -5,7 +5,7 @@ from Level import level
 from Player import player
 from .Menu.mainMenu import *
 from .dt import *
-
+from .SaveFiles import Functions
 
 class Game:
     def __init__(self):
@@ -22,18 +22,6 @@ class Game:
         self.entry_point = "North"
         stats = {}
         self.player = player.Player(stats)
-
-    def execute_level(self):
-        if self.level is None:
-            self.level = level.Level(self.load_map, self.entry_point, self.player)
-        print("done1")        
-        next_level, self.player =self.level.run(self.clock)
-        if next_level == "main menu":
-            self.state = "menu"
-        else:
-            self.level = None
-            self.load_map = next_level[0]
-            self.entry_point = next_level[1]
 
     def Run(self):
         while True:
@@ -55,6 +43,10 @@ class Game:
                 next_level, self.player =self.level.run(self.clock)
                 if next_level == "main menu":
                     self.state = "menu"
+                elif next_level == "quit":
+                    Functions.collecting_data(self.player)
+                    pygame.quit()
+                    sys.exit()
                 else:
                     self.level = None
                     self.load_map = next_level[0]

@@ -73,9 +73,10 @@ class Level:
                     pauseMenu, last_time = pause_menu(self.display_surface, clock, last_time)
                     if pauseMenu == "play":
                         continue
+
                     elif pauseMenu == "quit":
-                        pygame.quit()
-                        sys.exit()
+                        return "quit", self.player
+                    
                     elif pauseMenu == "return to main menu":
                         return "main menu", self.player
             self.display_surface.fill('white')

@@ -1,15 +1,15 @@
 import json
-from ...Player import player
+
 
 # Collecting all the data and formatting that for use.
 def collecting_data(player):
+    # Creating the the entire dataset that needs to be saved:
+    save_data = {}
+    # Getting the player stats
     player_stats =player.get_stats()
     print(player_stats)
 
 # Saving the items and writing them to a file
-
-
-
 
 # Writing data to a JSON file
 # with open("data.json", "w") as json_file:
