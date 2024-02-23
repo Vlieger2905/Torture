@@ -7,3 +7,7 @@ Tilesize = 96
 sprite_size = 32
 scale = Tilesize / sprite_size
 targetFPS = 6
+item_scale = 3
+item_size = 16
+item_display_size = 48
+

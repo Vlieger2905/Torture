@@ -19,12 +19,17 @@ buttons = [play_button,quit_button,main_menu]
 
 def pause_menu(screen,clock, last_time):
     while True:
+
         last_time,dt = detalTime.calculate_dt(last_time)
+        # Drawing the buttons
         for button in buttons:
             button.draw(screen)
+        # Checking all buttons for events
         event = Button.check_events(buttons)
+        # For each button check if the action happened and if so return the result
         for button in buttons:
             if event == button.output:
                 return button.output, last_time
+           
         clock.tick(FPS)
         pygame.display.flip()

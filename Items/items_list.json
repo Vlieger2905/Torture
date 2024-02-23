@@ -1,0 +1,12 @@
+[
+    {
+      "name": "Iron Sword",
+      "description": "A basic weapon forged from iron, the iron sword is sturdy and reliable. Its blade, though plain, holds a keen edge, suitable for cutting through soft materials and parrying weaker attacks.",
+      "image_location": "D:\\Atlas\\Year 2023\\Personal Pursuit 2\\Torture\\Items\\Sprites\\Old sword.png"
+    },
+    {
+      "name": "Iron Ring",
+      "description": "This simple iron ring is unadorned, yet its craftsmanship speaks of durability and strength. It's a modest accessory, but its solid construction suggests it will endure the test of time.",
+      "image_location": "example.com/iron_ring_image"
+    }
+  ]

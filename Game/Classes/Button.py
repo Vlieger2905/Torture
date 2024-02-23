@@ -43,9 +43,6 @@ class Button():
             
 def check_events(buttons):
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
         for button in buttons:
             case = button.handle_event(event)
             if case is not None:

@@ -11,8 +11,8 @@ class Game:
     def __init__(self):
         #Setting up the game class 
         pygame.init()
-        # self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
-        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH))
+        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
+        # self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH))
         pygame.display.set_caption('Torture')
         self.clock =  pygame.time.Clock()
         self.state = "menu"
@@ -25,7 +25,6 @@ class Game:
 
     def Run(self):
         while True:
-            self.screen.fill('white')
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()

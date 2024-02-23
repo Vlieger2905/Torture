@@ -1,6 +1,7 @@
 import pygame, math
 from Game import settings
 from .modifiers import *
+from .Inventory import Inventory
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
@@ -23,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.base_speed = base_speed
         self.world_speed = self.base_speed
         self.first_frame = True
+        # Defining the player inventory
+        self.inventory = Inventory()
         
 # loading the stats of the charachter into the playerclass
         
