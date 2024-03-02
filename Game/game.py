@@ -6,22 +6,33 @@ from Player import player
 from .Menu.mainMenu import *
 from .dt import *
 from .SaveFiles import Functions
+from .Classes.Item import creating_items
 
 class Game:
     def __init__(self):
         #Setting up the game class 
         pygame.init()
-        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
-        # self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH))
+        # self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGTH))
         pygame.display.set_caption('Torture')
+        # Setting up the fps control system of the game
         self.clock =  pygame.time.Clock()
-        self.state = "menu"
         self.last_time = pygame.time.get_ticks()
+
+        self.state = "menu"
+        # Information of the map 
         self.level = None
+        # In what map the player is
         self.load_map = "Map Data\\Test Center"
+        # Where the player should spawn in
         self.entry_point = "North"
+        # List of all the items possible in the game
+        self.item_list = creating_items()
+
+        # player information and creation
         stats = {}
-        self.player = player.Player(stats)
+        self.player = player.Player(stats,self.item_list )
+        
 
     def Run(self):
         while True:

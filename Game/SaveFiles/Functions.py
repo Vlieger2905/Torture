@@ -7,6 +7,7 @@ def collecting_data(player):
     save_data = {}
     # Getting the player stats
     player_stats =player.get_stats()
+    player_items = player.get_items()
     # print(player_stats)
 
 

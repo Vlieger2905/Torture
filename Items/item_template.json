@@ -1,0 +1,6 @@
+This is the template of how to put the information of an item in the item_list
+{
+    "name": "",
+    "description": "",
+    "image_location": ""
+}

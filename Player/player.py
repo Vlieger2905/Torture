@@ -5,7 +5,7 @@ from .Inventory import Inventory
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
-    def __init__(self, stats):
+    def __init__(self, stats, item_list):
         super().__init__()
         # super().__init__(groups)
         self.image = pygame.image.load('Sprites\\Player\\Village boy #1.png').convert_alpha()
@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.world_speed = self.base_speed
         self.first_frame = True
         # Defining the player inventory
-        self.inventory = Inventory()
+        self.inventory = Inventory(item_list)
         
 # loading the stats of the charachter into the playerclass
         
@@ -117,6 +117,18 @@ class Player(pygame.sprite.Sprite):
         }
         return stats
 
+    def get_items(self):
+        items ={
+            "headwear": self.headwear.name,
+            "chestplate": self.chestplate.name,
+            "pants": self.pants.name,
+            "boots": self.boots.name,
+            "necklace": self.necklace.name,
+            "ring": self.ring.name,
+            "left_hand": self.left_hand.name,
+            "right_hand": self.right_hand.name,
+            "inventory_items": self.inventory_items.name
+        }
 
     def input(self):
         keys = pygame.key.get_pressed()
