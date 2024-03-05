@@ -86,7 +86,7 @@ class Level:
                             pass
                     
                     if event.key == pygame.K_i:
-                        last_time = self.player.inventory.draw(clock)
+                        last_time = self.player.inventory.update(clock)
                         
 
             self.display_surface.fill('white')
