@@ -38,6 +38,10 @@ class Inventory:
         self.inventory_size = 45
         self.buttons = []
 
+        # Aditional functionality for the buttons
+        self.selected_item = None
+        self.selected_item_position = None
+
         # Defining the buttons of the inventory slot.
         i = 0
         j = 0
@@ -47,9 +51,9 @@ class Inventory:
             item_position_y = self.inventory_items_first_position[1] + j * self.inventory_items_distance
             # Creating the Buttons and if there is already an item in the slot the buttons get the corresponding image.
             if item is not None:
-                self.buttons.append(Inventory_button.Inventory_Button((item_position_x,item_position_y), item.image, (self.inventory_size, self.inventory_size)))
+                self.buttons.append(Inventory_button.Inventory_Button((item_position_x,item_position_y), item.image, (48,48)))
             else:
-                self.buttons.append(Inventory_button.Inventory_Button((item_position_x,item_position_y), None, (self.inventory_size, self.inventory_size)))
+                self.buttons.append(Inventory_button.Inventory_Button((item_position_x,item_position_y), None, (48,48)))
             i += 1
             if i == 9:
                 i = 0
@@ -57,9 +61,12 @@ class Inventory:
         
     def update(self, clock):
         last_time = pygame.time.get_ticks()
+        for button in self.buttons:
+            button.pressed = False
         while True:
             last_time,dt = calculate_dt(last_time)
-            for event in pygame.event.get():
+            pygame_events = pygame.event.get()
+            for event in pygame_events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
@@ -85,12 +92,20 @@ class Inventory:
                     self.buttons[i].image = self.inventory_items[i].image
                 else:
                     self.buttons[i].image = None
-            # Drawing the buttons
-            for button in self.buttons:
-                button.draw(self.surface)
-            
+
             # Blitting the surface on the screen
             self.screen.blit(self.surface, (0,0))
+
+            # Drawing the buttons
+            for button in self.buttons:
+                button.draw(self.screen)
+            
+            # Checking whether buttons are getting pressed or not
+            selected = Inventory_button.check_events_inventory(self.buttons, pygame_events)    
+
+            # Checking on which inventory slot gets selected/pressed
+
+
             clock.tick()
             pygame.display.update()
 
@@ -105,6 +120,8 @@ class Inventory:
                 self.inventory_items[i] = item_to_add
                 item_to_add = None
 
+    # Function to delete items from the inventory
+    # def delete_item(self,)
 
 
 
