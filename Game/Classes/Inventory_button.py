@@ -28,35 +28,16 @@ class Inventory_Button():
 
 
     def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            # Left mouse button pressed
-            if self.rect.collidepoint(event.pos):
-                self.pressed = True
-            # If you press the same space twice you unselect it.
-            elif self.rect.collidepoint(event.pos) and self.pressed:
-                self.pressed = False
-        return self.pressed
-
-# def check_events_inventory(buttons, events):
-#     for event in events:
-#         for button in buttons:
-#             button.handle_event(event)
-#             if button.pressed == True:
-#                 return button
+        # Left mouse button pressed
+        if self.rect.collidepoint(event.pos):
+            self.pressed = True
+        # If you press the same space twice you unselect it.
+        elif self.pressed:
+            self.pressed = False
             
-def check_events_inventory(buttons, events):
-    selected_button = None
-    
-    for event in events:
-        for button in buttons:
-            button.handle_event(event)
+        return self.pressed
+          
 
-            if button.pressed:
-                selected_button = button
-                for item in buttons:
-                    item.pressed = (item == button)
-    
-    return selected_button
 
 
             

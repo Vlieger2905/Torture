@@ -40,7 +40,9 @@ class Inventory:
 
         # Aditional functionality for the buttons
         self.selected_item = None
-        self.selected_item_position = None
+        self.previous_item_position = None
+        self.clicked = False
+        self.mouse_button = None
 
         # Defining the buttons of the inventory slot.
         i = 0
@@ -61,6 +63,7 @@ class Inventory:
         
     def update(self, clock):
         last_time = pygame.time.get_ticks()
+        # Resetting every inventory button to be not pressed
         for button in self.buttons:
             button.pressed = False
         while True:
@@ -100,28 +103,92 @@ class Inventory:
             for button in self.buttons:
                 button.draw(self.screen)
             
-            # Checking whether buttons are getting pressed or not
-            selected = Inventory_button.check_events_inventory(self.buttons, pygame_events)    
+            # # Checking whether buttons are getting pressed or not
+            # selected_button = Inventory_button.check_events_inventory(self.buttons, pygame_events)    
+            # # Store the information of the index of the inventory slot and the item within
+            # if selected_button is not None and self.selected_item is None:    
+            #     self.previous_item_position = self.buttons.index(selected_button)
+            #     self.selected_item = self.inventory_items[self.previous_item_position]
+            # # When a different inventory slot gets selected move the item to that slot and empty the space it previously occupied
+            # elif selected_button is not None and self.selected_item is not None:
+            #     new_index = self.buttons.index(selected_button)
+            #     self.inventory_items[new_index] = self.selected_item
+            #     self.inventory_items[self.previous_item_position] = None
+            #     self.previous_item_position = new_index
 
-            # Checking on which inventory slot gets selected/pressed
+            # Checking for button presses and makes the results of pressing buttons after eachother happen.
+            self.handle_events(pygame_events)
 
-
-            clock.tick()
+            clock.tick(30)
             pygame.display.update()
 
     # Function to add items to the inventory in the next available slot
     def add_item(self, item_name):
+        # Creating a instance of the correct item
         for item in self.all_items:
             if item_name == item.name:
                 item_to_add = item
                 continue
+        # Putting the item in the next empty slot in the inventory
         for i in range(len(self.inventory_items)):
             if self.inventory_items[i] is None:
                 self.inventory_items[i] = item_to_add
                 item_to_add = None
 
-    # Function to delete items from the inventory
-    # def delete_item(self,)
+    # Function to handle the events and actions within the inventory
+    def handle_inventory_clicks(self, selected_button):
+        if selected_button is not None:
+            if self.mouse_button == "Left click":
+                clicked_index = self.buttons.index(selected_button)
+
+                # No item is selected, so select the clicked item
+                if self.selected_item is None:
+                    if clicked_index != self.previous_item_position:
+                        self.previous_item_position = clicked_index
+                        self.selected_item = self.inventory_items[clicked_index]
+                    
+                    else:
+                        # Clicked on the same slot again, deselect the item
+                        self.selected_item = None
+                        self.previous_item_position = None
+                        self.buttons[clicked_index].pressed = False
+                    
+                
+                # An item is already selected
+                else:
+                    if clicked_index == self.previous_item_position:
+                        # Clicked on the same slot again, deselect the item
+                        self.selected_item = None
+                        self.previous_item_position = None
+                        self.buttons[clicked_index].pressed = False
+                    else:
+                        # Clicked on a different slot, move the item
+                        self.inventory_items[clicked_index] = self.selected_item
+                        self.inventory_items[self.previous_item_position] = None
+                        self.previous_item_position = None
+                        self.selected_item = None
+                        self.buttons[clicked_index].pressed = False
 
 
+    def handle_events(self, pygame_events):
+        # Checking if a button gets pressed
+        selected_button, self.mouse_button = self.check_events_inventory(pygame_events)
+        self.handle_inventory_clicks(selected_button)  
 
+    def check_events_inventory(self, events):
+        selected_button = None
+        mouse_button = None
+
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                mouse_button = "Left click"
+                for button in self.buttons:
+                    button.handle_event(event)
+
+                    if button.pressed:
+                        selected_button = button
+                        for item in self.buttons:
+                            item.pressed = (item == button)
+
+        return selected_button, mouse_button
+    
