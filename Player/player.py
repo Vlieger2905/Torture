@@ -73,8 +73,7 @@ class Player(pygame.sprite.Sprite):
         self.aligment() 
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits 
-        self.first_frame = True
-        
+        self.first_frame = True      
 
     def get_stats(self):
         stats = {
@@ -119,16 +118,18 @@ class Player(pygame.sprite.Sprite):
 
     def get_items(self):
         items ={
-            "headwear": self.headwear.name,
-            "chestplate": self.chestplate.name,
-            "pants": self.pants.name,
-            "boots": self.boots.name,
-            "necklace": self.necklace.name,
-            "ring": self.ring.name,
-            "left_hand": self.left_hand.name,
-            "right_hand": self.right_hand.name,
-            "inventory_items": self.inventory_items.name
-        }
+        "headwear": self.inventory.headwear.name if self.inventory.headwear else "",
+        "chestplate": self.inventory.chestplate.name if self.inventory.chestplate else "",
+        "pants": self.inventory.pants.name if self.inventory.pants else "",
+        "boots": self.inventory.boots.name if self.inventory.boots else "",
+        "necklace": self.inventory.necklace.name if self.inventory.necklace else "",
+        "ring": self.inventory.ring.name if self.inventory.ring else "",
+        "left_hand": self.inventory.left_hand.name if self.inventory.left_hand else "",
+        "right_hand": self.inventory.right_hand.name if self.inventory.right_hand else "",
+        "inventory_items" : [item.name if item else "" for item in self.inventory.inventory_items]
+    }
+
+        return items
 
     def input(self):
         keys = pygame.key.get_pressed()

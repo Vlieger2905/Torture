@@ -67,10 +67,11 @@ class Level:
             last_time,dt = detalTime.calculate_dt(last_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                # Running the pause menu
+                    return "quit", self.player
+                
+                # What to do when a key gets pressed
                 if event.type == pygame.KEYDOWN:
+                    # Running the pause menu
                     if event.key == pygame.K_ESCAPE:
                         pauseMenu, last_time = pause_menu(self.display_surface, clock, last_time)
                         if pauseMenu == "play":
@@ -84,7 +85,7 @@ class Level:
 
                         else:
                             pass
-                    
+                    # Open the inventory
                     if event.key == pygame.K_i:
                         last_time = self.player.inventory.update(clock)
                         

@@ -8,7 +8,7 @@ pygame.init()
 # Loading button images
 play_image = pygame.image.load("Sprites/Buttons/Test/Play-test.png")
 quit_image = pygame.image.load("Sprites/Buttons/Test/Quit-test.png")
-menu_image = pygame.image.load("Sprites\DEV resources\SpriteTest.png")
+menu_image = pygame.image.load("Sprites/DEV resources/SpriteTest.png")
 # Creating the buttons
 play_button = Button.Button((100, 100),"play", play_image, None, (200, 100))
 quit_button = Button.Button((100, 200),"quit", quit_image, None, (200, 100))
@@ -19,6 +19,10 @@ buttons = [play_button,quit_button,main_menu]
 
 def pause_menu(screen,clock, last_time):
     while True:
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    return quit_button.output, last_time
+        
 
         last_time,dt = detalTime.calculate_dt(last_time)
         # Drawing the buttons

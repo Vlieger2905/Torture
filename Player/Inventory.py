@@ -102,19 +102,6 @@ class Inventory:
             # Drawing the buttons
             for button in self.buttons:
                 button.draw(self.screen)
-            
-            # # Checking whether buttons are getting pressed or not
-            # selected_button = Inventory_button.check_events_inventory(self.buttons, pygame_events)    
-            # # Store the information of the index of the inventory slot and the item within
-            # if selected_button is not None and self.selected_item is None:    
-            #     self.previous_item_position = self.buttons.index(selected_button)
-            #     self.selected_item = self.inventory_items[self.previous_item_position]
-            # # When a different inventory slot gets selected move the item to that slot and empty the space it previously occupied
-            # elif selected_button is not None and self.selected_item is not None:
-            #     new_index = self.buttons.index(selected_button)
-            #     self.inventory_items[new_index] = self.selected_item
-            #     self.inventory_items[self.previous_item_position] = None
-            #     self.previous_item_position = new_index
 
             # Checking for button presses and makes the results of pressing buttons after eachother happen.
             self.handle_events(pygame_events)
