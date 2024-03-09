@@ -5,7 +5,7 @@ from Level import level
 from Player import player
 from .Menu.mainMenu import *
 from .dt import *
-from .SaveFiles import Save_Functions
+from SaveFiles import Save_Functions
 from .Classes.Item import creating_items
 
 class Game:

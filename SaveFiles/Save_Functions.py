@@ -15,13 +15,13 @@ def collecting_data(player, game):
 
 # Function to write the save data to a json file
 def writing_save_data(data):
-    file_name = "Game/SaveFiles/Save File.json"
+    file_name = "SaveFiles/Save File.json"
     with open(file_name, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
 # Function to read the save data from a json file
 def reading_save_data():
-    file_name = "Game/SaveFiles/Save File.json"
+    file_name = "SaveFiles/Save File.json"
     with open(file_name, 'r') as json_file:
             data = json.load(json_file)
     return data
