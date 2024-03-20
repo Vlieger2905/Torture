@@ -25,7 +25,7 @@ class Item:
         self.image = pygame.image.load(image).convert_alpha()
         self.image = pygame.transform.scale_by(self.image, item_scale)
         # Item class that determines in which slot the item can go.
-        self.item_class = item_class
+        self.type = item_class
 
     # Function to draw the item
     def draw(self, screen, position):

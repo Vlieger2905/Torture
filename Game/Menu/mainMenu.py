@@ -15,10 +15,11 @@ buttons = [play_button,quit_button]
 # Running the menu
 def mainMenu(screen):
     while True:
+        pygame_events = pygame.event.get()
         screen.fill((255,255,255))
         for button in buttons:
             button.draw(screen)
-        event = Button.check_events(buttons)
+        event = Button.check_events(buttons, pygame_events)
 
         for button in buttons:
             if event == button.output:

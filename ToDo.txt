@@ -16,7 +16,7 @@ Programming:
     PLayer stats
     Enemy AI
     Enemy spawn
-    Save/load
+    Save/load (partly finished expand as needed)
     Combat system
     Npc system
 

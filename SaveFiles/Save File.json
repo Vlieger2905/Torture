@@ -2,7 +2,7 @@
     "player_stats": {
         "level": 1,
         "Might": 14,
-        "Agility": 7,
+        "Agility": 527,
         "Mind": 3,
         "Vitality": 12,
         "Fortitude": 6,
@@ -85,5 +85,5 @@
         ]
     },
     "current level": "Map Data\\Test Center",
-    "spawnpoint": "Center"
+    "spawnpoint": "North"
 }
