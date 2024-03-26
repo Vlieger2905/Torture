@@ -136,7 +136,7 @@ class Inventory:
             
             # Updating the buttons to display the correct image if a item is added/changed/removed
             for i in range(len(self.inventory_items)):
-                if self.inventory_items[i] != "":
+                if self.inventory_items[i] != "" and self.inventory_items[i] != None:
                     self.buttons[i].image = self.inventory_items[i].image
                 else:
                     self.buttons[i].image = None
@@ -144,7 +144,7 @@ class Inventory:
             # Updating the equipment slot button images
             for i in range(len(self.equipment_buttons)):
                 if i == 0:
-                    if self.headwear != "":
+                    if self.headwear != "" and self.headwear != None:
                         self.equipment_buttons[i].image = self.headwear.image
                     else:
                         self.equipment_buttons[i].image = None
@@ -201,7 +201,6 @@ class Inventory:
             # Checking for button presses and makes the results of pressing buttons after eachother happen.
             self.handle_events(pygame_events)
 
-            print(self.selected_item)
             clock.tick(60)
             pygame.display.update()
 
@@ -242,32 +241,74 @@ class Inventory:
 
                     # An item is already selected
                     else:
-                        if clicked_index == self.previous_item_position:
-                            # Clicked on the same slot again, deselect the item
-                            self.selected_item = None
-                            self.previous_item_position = None
-                            self.buttons[clicked_index].pressed = False
+                        # Moving the item within the inventory
+                        if self.previous_button_type == "inventory":
+                            if clicked_index == self.previous_item_position:
+                                # Clicked on the same slot again, deselect the item
+                                self.selected_item = None
+                                self.previous_item_position = None
+                                self.buttons[clicked_index].pressed = False
 
-                        elif self.buttons[clicked_index].image is not None:
-                            temp_save_item = self.inventory_items[clicked_index]
-                            self.inventory_items[clicked_index] = self.selected_item
-                            self.inventory_items[self.previous_item_position] = temp_save_item
-                            self.previous_item_position = None
-                            self.selected_item = None
-                            self.buttons[clicked_index].pressed = False
-
-                        else:
+                            elif self.buttons[clicked_index].image is not None:
+                                temp_save_item = self.inventory_items[clicked_index]
+                                self.inventory_items[clicked_index]  = self.selected_item
+                                self.inventory_items[self.previous_item_position] = temp_save_item
+                                self.previous_item_position = None
+                                self.selected_item = None
+                                self.buttons[clicked_index].pressed = False
+                            
                             # Clicked on a different slot, move the item
-                            self.inventory_items[clicked_index] = self.selected_item
-                            self.inventory_items[self.previous_item_position] = ""
-                            self.previous_item_position = None
-                            self.selected_item = None
-                            self.buttons[clicked_index].pressed = False
+                            else:
+                                self.inventory_items[clicked_index] = self.selected_item
+                                self.inventory_items[self.previous_item_position] = ""
+                                self.previous_item_position = None
+                                self.selected_item = None
+                                self.buttons[clicked_index].pressed = False
+
+                        # Moving the item for the equipement slot to the inventory
+                        elif self.previous_button_type == "equipement":
+                            # Check if the inventory slot that is now pressed is empty and if it is empty move it to there
+                            if self.inventory_items[clicked_index] == "" or self.inventory_items[clicked_index] == None:
+                                # Putting the selected item in a inventory slot as it is empty
+                                self.inventory_items[clicked_index] = self.selected_item
+                                self.buttons[clicked_index].pressed = False
+                                self.selected_item = None
+                                # Emtpying the item slot
+                                if self.previous_item_position == 0:
+                                    self.headwear = ""
+                                elif self.previous_item_position == 1:
+                                    self.chestplate = ""
+                                elif self.previous_item_position == 2:
+                                    self.pants = ""
+                                elif self.previous_item_position == 3:
+                                    self.boots = ""
+                                elif self.previous_item_position == 4:
+                                    self.necklace = ""
+                                elif self.previous_item_position == 5:
+                                    self.ring = ""
+                                elif self.previous_item_position == 6:
+                                    self.left_hand = ""
+                                elif self.previous_item_position == 7:
+                                    self.right_hand = ""
+                                
+                                self.buttons[clicked_index].pressed = False
+
+                            # If the selected slot is not empty place the item in the next slot that is empty
+                            
+                            elif self.inventory_items[clicked_index] != "" or self.inventory_items[clicked_index] != None:
+                                for i in range(len(self.inventory_items)):
+                                    if self.inventory_items[i] == "":
+                                        self.inventory_items[i] = self.selected_item
+                                        self.selected_item = None
+                                        self.previous_item_position = None
+                                        self.buttons[clicked_index].pressed = False
+                                        break
+
 
                     self.previous_button_type = "inventory"
 
             # Do something when a equipement button has been pressed
-            if self.selected_button_type == "equipement":
+            elif self.selected_button_type == "equipement":
                 if self.mouse_button == "Left click":
                     clicked_index = self.equipment_buttons.index(selected_button)
 
@@ -310,33 +351,45 @@ class Inventory:
                                 self.selected_item = None
                                 self.previous_item_position = None
                                 self.equipment_buttons[clicked_index].pressed = False
+                            
                             # When de index is the same but the item is selected from the inventory. The item should be moved from the inventory to the equipement slot
                             elif self.previous_button_type == "inventory":
                                 if self.equipment_buttons[clicked_index].type == self.selected_item.type:
                                     if clicked_index == 0:
-                                        self.headwear = self.selected_item
+                                        self.headwear, self.inventory_items[self.previous_item_position] = self.selected_item, self.headwear
                                     elif clicked_index == 1:
-                                        self.chestplate = self.selected_item
+                                        self.chestplate, self.inventory_items[self.previous_item_position] = self.selected_item, self.headwear
                                     elif clicked_index == 2:
-                                        self.pants = self.selected_item
+                                        self.pants, self.inventory_items[self.previous_item_position] = self.selected_item,self.pants
                                     elif clicked_index == 3:
-                                        self.boots = self.selected_item
+                                        self.boots, self.inventory_items[self.previous_item_position] = self.selected_item,self.boots
                                     elif clicked_index == 4:
-                                        self.necklace = self.selected_item
+                                        self.necklace, self.inventory_items[self.previous_item_position] = self.selected_item, self.necklace
                                     elif clicked_index == 5:
-                                        self.ring = self.selected_item
+                                        self.ring, self.inventory_items[self.previous_item_position] = self.selected_item, self.ring
                                     elif clicked_index == 6:
-                                        self.left_hand = self.selected_item
+                                        self.left_hand, self.inventory_items[self.previous_item_position] = self.selected_item, self.left_hand
                                     elif clicked_index == 7:
-                                        self.right_hand = self.selected_item
+                                        self.right_hand, self.inventory_items[self.previous_item_position] = self.selected_item, self.right_hand
                                     
                                     # Remove the item from its previous slot.
-                                    self.inventory_items[clicked_index] = ""
+                                    self.selected_item = None
+                                    self.previous_item_position = None
+                                    # Unpressing the button
+                                    self.equipment_buttons[clicked_index].pressed = False
+
+
+                                elif self.equipment_buttons[clicked_index].type != self.selected_item.type:
+                                    # Remove the item from its previous slot.
+                                    self.selected_item = None
+                                    self.previous_item_position = None
+                                    # Unpressing the button
+                                    self.equipment_buttons[clicked_index].pressed = False
 
                         # If a diferent index was selected last time change the equip the item if possible:
                         else:
                             # When the previous button was of the equipement then just select a the new pressed button as the selected item. Without changing the last one
-                            if self.selected_button_type == "equipement":
+                            if self.previous_button_type == "equipement":
                                 # When the last button press was a different equipement type select new equipement as the selected item
                                 if clicked_index == 0:
                                     self.selected_item = self.headwear 
@@ -360,37 +413,43 @@ class Inventory:
                                 self.previous_item_position = clicked_index
 
                             # When the previous button was of the inventory type, Equip the item if the item can be equiped in the new slot
-                            if self.selected_button_type == "inventory":
-                                if self.equipment_buttons[clicked_index].type == self.inventory_items[self.previous_button_type].type:
+                            if self.previous_button_type == "inventory":
+                                if self.equipment_buttons[clicked_index].type == self.selected_item.type:
                                     # Assigning the item to the equipement
                                     if clicked_index == 0:
-                                        self.headwear = self.selected_item
+                                        self.headwear, self.inventory_items[self.previous_item_position] = self.selected_item, self.headwear
                                     elif clicked_index == 1:
-                                        self.chestplate = self.selected_item
+                                        self.chestplate, self.inventory_items[self.previous_item_position] = self.selected_item, self.headwear
                                     elif clicked_index == 2:
-                                        self.pants = self.selected_item
+                                        self.pants, self.inventory_items[self.previous_item_position] = self.selected_item,self.pants
                                     elif clicked_index == 3:
-                                        self.boots = self.selected_item
+                                        self.boots, self.inventory_items[self.previous_item_position] = self.selected_item,self.boots
                                     elif clicked_index == 4:
-                                        self.necklace = self.selected_item
+                                        self.necklace, self.inventory_items[self.previous_item_position] = self.selected_item, self.necklace
                                     elif clicked_index == 5:
-                                        self.ring = self.selected_item
+                                        self.ring, self.inventory_items[self.previous_item_position] = self.selected_item, self.ring
                                     elif clicked_index == 6:
-                                        self.left_hand = self.selected_item
+                                        self.left_hand, self.inventory_items[self.previous_item_position] = self.selected_item, self.left_hand
                                     elif clicked_index == 7:
-                                        self.right_hand = self.selected_item
+                                        self.right_hand, self.inventory_items[self.previous_item_position] = self.selected_item, self.right_hand
+
                                     # Resetting the selected item information
                                     self.selected_item = None
                                     self.previous_button_type = None
                                     self.previous_item_position = None
+                                    self.equipment_buttons[clicked_index].pressed = False    
+                                    
+                                elif self.equipment_buttons[clicked_index].type != self.selected_item.type:
+                                    # Remove the item from its previous slot.
+                                    self.selected_item = None
+                                    self.previous_item_position = None
+                                    # Unpressing the button
+                                    self.equipment_buttons[clicked_index].pressed = False
 
 
                     # Set the pressed button type to equipement
                     self.previous_button_type = "equipement"
                             
-
-
-
     def handle_events(self, pygame_events):
         # Checking if a button gets pressed
         selected_button, self.mouse_button = self.check_events_inventory(pygame_events)

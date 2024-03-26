@@ -13,6 +13,8 @@ Programming:
         Settings
         Save
     Inventory
+        Deselect item if no button gets pressed but the left mouse button does get pressed.
+        
     PLayer stats
     Enemy AI
     Enemy spawn
@@ -22,4 +24,5 @@ Programming:
 
 Game ideas:
     Make a list of every time a player died. That saves the location and cause of the death together with the date and time and then at the end of the game there is a monument or graveyard with all of the players attempts
-        
+    
+
