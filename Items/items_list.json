@@ -3,13 +3,13 @@
       "name": "Iron Sword",
       "description": "A basic weapon forged from iron, the iron sword is sturdy and reliable. Its blade, though plain, holds a keen edge, suitable for cutting through soft materials and parrying weaker attacks.",
       "image_location": "D:\\Atlas\\Year 2023\\Personal Pursuit 2\\Torture\\Items\\Sprites\\Old sword.png",
-      "item_class": "one-handed"
+      "item_class": "headwear"
     },
     {
-      "name": "Iron dagger",
-      "description": "A basic weapon forged from iron, the iron dagger is sturdy and reliable. Its blade, though plain, holds a keen edge, suitable for cutting through soft materials and parrying weaker attacks.",
-      "image_location": "D:\\Atlas\\Year 2023\\Personal Pursuit 2\\Torture\\Items\\Sprites\\Old sword.png",
-      "item_class": "one-handed"
+      "name": "Rusty Helmet",
+      "description": "A simple helmet that has seen many battles. Only able to redirect the weakest of attacks",
+      "image_location": "D:/Atlas/Year 2023/Personal Pursuit 2/Torture/Items/Sprites/Rusty Helmet.png",
+      "item_class": "headwear"
     }
 ]
 
