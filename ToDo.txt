@@ -13,8 +13,6 @@ Programming:
         Settings
         Save
     Inventory
-        Deselect item if no button gets pressed but the left mouse button does get pressed.
-        
     PLayer stats
     Enemy AI
     Enemy spawn

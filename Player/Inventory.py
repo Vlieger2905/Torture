@@ -3,6 +3,7 @@ from Game.settings import *
 from Game.dt import calculate_dt
 from Game.Classes import Inventory_button
 from SaveFiles import Save_Functions
+import Game.Classes.Item as it
 
 class Inventory:
     def __init__(self, item_list, loaded_items):
@@ -15,21 +16,45 @@ class Inventory:
         # A list of all the possible items in the game
         self.all_items = item_list
         # Defining all the equiped items of the player
+        # Headwear
         self.headwear = loaded_items.get("headwear", "")
+        if self.headwear != "":
+            self.headwear = it.create_item(self.headwear)
         self.headwear_position = (448,224)
+        # Chestplate
         self.chestplate = loaded_items.get("chestplate", "")
+        if self.chestplate != "":
+            self.chestplate = it.create_item(self.chestplate)
         self.chestplate_position = (448,320)
+        # Pants
         self.pants = loaded_items.get("pants", "")
+        if self.pants != "":
+            self.pants = it.create_item(self.pants)
         self.pants_position = (448,416)
+        # Boots
         self.boots = loaded_items.get("boots", "")
+        if self.boots != "":
+            self.boots = it.create_item(self.boots)
         self.boots_position = (448,512)
+        # Necklace
         self.necklace = loaded_items.get("necklace", "")
+        if self.necklace != "":
+            self.necklace = it.create_item(self.necklace)
         self.necklace_position = (180,224)
+        # Ring
         self.ring = loaded_items.get("ring", "")
+        if self.ring != "":
+            self.ring = it.create_item(self.ring)
         self.ring_position = (180,320)
+        # Left hand
         self.left_hand = loaded_items.get("left_hand", "")
+        if self.left_hand != "":
+            self.left_hand = it.create_item(self.left_hand)
         self.left_hand_position = (180,416)
+        # Right hand
         self.right_hand = loaded_items.get("right_hand", "")
+        if self.right_hand != "":
+            self.right_hand = it.create_item(self.right_hand)
         self.right_hand_position = (180,512)
 
         # Defining the list with the inventory items inside:
@@ -49,7 +74,7 @@ class Inventory:
         self.selected_button_type = None
         self.previous_button_type = None
 
-        # Defining the buttons of the inventory slot.
+    # Defining the buttons of the inventory slot.
         i = 0
         j = 0
         for item in self.inventory_items:
@@ -91,8 +116,6 @@ class Inventory:
 
         right_hand_image = self.right_hand.image if hasattr(self.right_hand, 'image') else None
         self.equipment_buttons.append(Inventory_button.Equipement_Button(self.right_hand_position, "right_hand", right_hand_image))
-
-        
 
     def update(self, clock):
         last_time = pygame.time.get_ticks()
@@ -207,10 +230,7 @@ class Inventory:
     # Function to add items to the inventory in the next available slot
     def add_item(self, item_name):
         # Creating a instance of the correct item
-        for item in self.all_items:
-            if item_name == item.name:
-                item_to_add = item
-                continue
+        item_to_add = it.create_item(item_name)
         # Putting the item in the next empty slot in the inventory
         for i in range(len(self.inventory_items)):
             if self.inventory_items[i] == "":
@@ -243,12 +263,13 @@ class Inventory:
                     else:
                         # Moving the item within the inventory
                         if self.previous_button_type == "inventory":
-                            if clicked_index == self.previous_item_position:
-                                # Clicked on the same slot again, deselect the item
+                            # Clicked on the same slot again, deselect the item
+                            if clicked_index == self.previous_item_position: 
                                 self.selected_item = None
                                 self.previous_item_position = None
                                 self.buttons[clicked_index].pressed = False
-
+                            # When a item is selected and you click on another slot that already has an item
+                            # Swap the items
                             elif self.buttons[clicked_index].image is not None:
                                 temp_save_item = self.inventory_items[clicked_index]
                                 self.inventory_items[clicked_index]  = self.selected_item
@@ -294,16 +315,40 @@ class Inventory:
                                 self.buttons[clicked_index].pressed = False
 
                             # If the selected slot is not empty place the item in the next slot that is empty
-                            
                             elif self.inventory_items[clicked_index] != "" or self.inventory_items[clicked_index] != None:
                                 for i in range(len(self.inventory_items)):
                                     if self.inventory_items[i] == "":
                                         self.inventory_items[i] = self.selected_item
                                         self.selected_item = None
-                                        self.previous_item_position = None
+                                        # self.previous_item_position = None
                                         self.buttons[clicked_index].pressed = False
                                         break
+                                # If an item has been placed in the inventory placed:
+                                if self.selected_item == None:
+                                    # Emtpying the item slot the item came from
+                                    if self.previous_item_position == 0:
+                                        self.headwear = ""
+                                    elif self.previous_item_position == 1:
+                                        self.chestplate = ""
+                                    elif self.previous_item_position == 2:
+                                        self.pants = ""
+                                    elif self.previous_item_position == 3:
+                                        self.boots = ""
+                                    elif self.previous_item_position == 4:
+                                        self.necklace = ""
+                                    elif self.previous_item_position == 5:
+                                        self.ring = ""
+                                    elif self.previous_item_position == 6:
+                                        self.left_hand = ""
+                                    elif self.previous_item_position == 7:
+                                        self.right_hand = ""
+                                    # Deleting previous data
+                                    self.previous_item_position = None
 
+                                # When the inventory is full make the precious item box flash red
+                                elif self.selected_item != None:
+                                    # TODO
+                                    pass
 
                     self.previous_button_type = "inventory"
 
@@ -485,17 +530,20 @@ class Inventory:
 
     def load_inventory_items_boot(self, inventory_items_to_load):
         inventory_loaded = []
+
         for item in inventory_items_to_load:
             # If no item list is provided create a empty inventory
             if inventory_items_to_load == None:
                 inventory_loaded = [""] * 45
+                break
             # If there is no item in the slot create a empty slot
             elif item == "":
                 inventory_loaded.append("")
             # If there is a item in the slot add the item to the inventory
             else:
-                for complete_item in self.all_items:
-                    if item == complete_item.name:
-                        inventory_loaded.append(complete_item)
+                inventory_loaded.append(it.create_item(item))
+                # for complete_item in self.all_items:
+                #     if item == complete_item.name:
+                #         inventory_loaded.append(complete_item)
         return inventory_loaded
     
