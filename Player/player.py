@@ -1,10 +1,11 @@
 import pygame, math
 from Game import settings
 from .modifiers import *
+from .Inventory import Inventory
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
-    def __init__(self, stats):
+    def __init__(self, stats, item_list, player_items):
         super().__init__()
         # super().__init__(groups)
         self.image = pygame.image.load('Sprites\\Player\\Village boy #1.png').convert_alpha()
@@ -23,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.base_speed = base_speed
         self.world_speed = self.base_speed
         self.first_frame = True
+        # Defining the player inventory
+        self.inventory = Inventory(item_list, player_items)
         
 # loading the stats of the charachter into the playerclass
         
@@ -64,15 +67,14 @@ class Player(pygame.sprite.Sprite):
         self.Plants_proficiency = stats.get("Plants_proficiency", 0)
         self.Lightning_proficiency = stats.get("Lightning_proficiency", 0)
 
-
+    # Spawning the player in a new level
     def spawn(self,spawn_position, obstacle_sprites, exits):
         self.hitbox.x, self.hitbox.y = spawn_position
         self.aligment() 
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits 
-        self.first_frame = True
-        
-
+        self.first_frame = True      
+    # Retrieving the player stats to save
     def get_stats(self):
         stats = {
             'level': self.level,
@@ -113,8 +115,22 @@ class Player(pygame.sprite.Sprite):
             'Lightning_proficiency': self.Lightning_proficiency
         }
         return stats
+    # Retreiving the player item to save
+    def get_items(self):
+        items ={
+        "headwear": self.inventory.headwear.name if self.inventory.headwear else "",
+        "chestplate": self.inventory.chestplate.name if self.inventory.chestplate else "",
+        "pants": self.inventory.pants.name if self.inventory.pants else "",
+        "boots": self.inventory.boots.name if self.inventory.boots else "",
+        "necklace": self.inventory.necklace.name if self.inventory.necklace else "",
+        "ring": self.inventory.ring.name if self.inventory.ring else "",
+        "left_hand": self.inventory.left_hand.name if self.inventory.left_hand else "",
+        "right_hand": self.inventory.right_hand.name if self.inventory.right_hand else "",
+        "inventory_items" : [item.name if item else "" for item in self.inventory.inventory_items]
+    }
 
-
+        return items
+    # Getting the input for the player movement
     def input(self):
         keys = pygame.key.get_pressed()
         self.direction.y = 0
@@ -136,7 +152,7 @@ class Player(pygame.sprite.Sprite):
         
         if keys[pygame.K_b]:
             self.Agility +=20
-    
+    # Move the player
     def move(self, dt):
         # If the player is moving making sure that the velocity stays the same and that the player is not moving faster when moving diagonally
         if self.direction.magnitude() != 0:
@@ -148,7 +164,6 @@ class Player(pygame.sprite.Sprite):
         self.collision_walls('horizontal')
         self.hitbox.y +=move_vector.y
         self.collision_walls('vertical')
-
 
     # Checks for the collision of the player hitbox with the obstacles
     def collision_walls(self, direction):

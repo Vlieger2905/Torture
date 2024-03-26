@@ -41,11 +41,8 @@ class Button():
             self.pressed = False
         return None
             
-def check_events(buttons):
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+def check_events(buttons, pygame_events):
+    for event in pygame_events:
         for button in buttons:
             case = button.handle_event(event)
             if case is not None:

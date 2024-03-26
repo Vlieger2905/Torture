@@ -9,7 +9,7 @@ from debug import *
 from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
-from .load_json import load_exit
+from .load_exit import load_exit
 
 class Level:
     def __init__(self, level_map, entry_point, player):
@@ -67,27 +67,43 @@ class Level:
             last_time,dt = detalTime.calculate_dt(last_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    pauseMenu, last_time = pause_menu(self.display_surface, clock, last_time)
-                    if pauseMenu == "play":
-                        continue
+                    return "quit", self.player
+                
+                # What to do when a key gets pressed
+                if event.type == pygame.KEYDOWN:
+                    # Running the pause menu
+                    if event.key == pygame.K_ESCAPE:
+                        pauseMenu, last_time = pause_menu(self.display_surface, clock, last_time)
+                        # Continue playing
+                        if pauseMenu == "play":
+                            continue
+                        # Exit the game
+                        elif pauseMenu == "quit":
+                            return "quit", self.player
+                        # Returning to the main menu
+                        elif pauseMenu == "return to main menu":
+                            return "main menu", self.player
 
-                    elif pauseMenu == "quit":
-                        return "quit", self.player
-                    
-                    elif pauseMenu == "return to main menu":
-                        return "main menu", self.player
+                        else:
+                            pass
+                    # Open the inventory
+                    if event.key == pygame.K_i:
+                        last_time = self.player.inventory.update(clock)
+                        # If, when in the inventory the player pressed the X button quit the game
+                        if last_time == "quit":
+                            return "quit", self.player
+                        
+
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
             self.visible_sprites.update(dt)
+
             # Checking if the player collides with a exit point on the map and the returns the next level and the point the player should spawn
             exit = self.player.collision_exit()
             if exit is not None:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            debug(self.player.world_speed)
+            # debug(self.player.world_speed)
             clock.tick(settings.FPS)
             pygame.display.update()
