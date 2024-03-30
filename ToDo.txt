@@ -13,7 +13,9 @@ Programming:
         Settings
         Save
     Inventory
+        Display item information
     PLayer stats
+        Leveling system
     Enemy AI
     Enemy spawn
     Save/load (partly finished expand as needed)

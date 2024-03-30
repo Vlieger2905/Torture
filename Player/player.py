@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         # Defining the player inventory
         self.inventory = Inventory(item_list, player_items)
         
-# loading the stats of the charachter into the playerclass
+    # loading the stats of the charachter into the playerclass
         
         # Player stats
         self.level = stats.get("level", 1)
@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
         self.aligment() 
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits 
-        self.first_frame = True      
+        self.first_frame = True    
     # Retrieving the player stats to save
     def get_stats(self):
         stats = {

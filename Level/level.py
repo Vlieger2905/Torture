@@ -10,6 +10,7 @@ from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
 from .load_exit import load_exit
+from Enemies.slime import Slime
 
 class Level:
     def __init__(self, level_map, entry_point, player):
@@ -38,6 +39,10 @@ class Level:
         self.player.spawn(entry_point,self.obstacle_sprites, self.exit_points)
         # Add player to visible_sprites group
         self.visible_sprites.add(self.player)
+
+        #Creating the enemies in the level
+        self.enemy = Slime((5978,1814),1, self.obstacle_sprites)
+        self.visible_sprites.add(self.enemy)
 
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
@@ -104,6 +109,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            # debug(self.player.world_speed)
+            debug(self.player.rect.center)
             clock.tick(settings.FPS)
             pygame.display.update()

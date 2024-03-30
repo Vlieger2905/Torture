@@ -24,7 +24,15 @@ class CameraGroup(pygame.sprite.Group):
 # Drawing the floor
         floor_offset = self.floor_rect.topleft - self.offset
         self.display_surface.blit(self.floor_surface, floor_offset)
-
+# Drawing the sprites
         for sprite in sorted(self.sprites(), key = lambda sprite: sprite.rect.centery):
             offset_position = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_position)
+#Testing function only
+#See the sensory lines of the enemy type
+            if hasattr(sprite, 'sensory_lines'):
+                # Draw sensory lines
+                for line in sprite.sensory_lines:
+                    start_point = (line[0][0] - self.offset.x, line[0][1] - self.offset.y)
+                    end_point = (line[1][0] - self.offset.x, line[1][1] - self.offset.y)
+                    pygame.draw.line(self.display_surface, line[2], start_point, end_point, 2)
