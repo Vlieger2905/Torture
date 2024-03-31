@@ -41,7 +41,7 @@ class Level:
         self.visible_sprites.add(self.player)
 
         #Creating the enemies in the level
-        self.enemy = Slime((5978,1814),1, self.obstacle_sprites)
+        self.enemy = Slime((6978,1814),1, self.obstacle_sprites)
         self.visible_sprites.add(self.enemy)
 
     def get_files_by_extension(self, folder_path, extensions):
@@ -101,7 +101,7 @@ class Level:
 
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
-            self.visible_sprites.update(dt)
+            self.visible_sprites.update(dt, self.player)
 
             # Checking if the player collides with a exit point on the map and the returns the next level and the point the player should spawn
             exit = self.player.collision_exit()
@@ -109,6 +109,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            debug(self.player.rect.center)
+            debug(self.enemy.rect.center)
             clock.tick(settings.FPS)
             pygame.display.update()

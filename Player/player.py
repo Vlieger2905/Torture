@@ -193,7 +193,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = self.hitbox.centerx
         self.rect.centery = self.hitbox.centery - (self.rect.height * 0.3)
 
-    def update(self,dt):
+    def update(self,dt, just_ignore_this_variable):
         if self.first_frame is False:
             self.input()
             self.move(dt)

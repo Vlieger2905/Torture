@@ -9,7 +9,8 @@ class Enemy(Sprite):
     def __init__(self):
         super().__init__()
         
-        # Move the Entity
+        
+    # Move the Entity
     def move(self, dt):
         # If the Entity is moving making sure that the velocity stays the same and that the Entity is not moving faster when moving diagonally
         if self.direction.magnitude() != 0:
@@ -20,6 +21,11 @@ class Enemy(Sprite):
         self.collision_walls('horizontal')
         self.hitbox.y +=move_vector.y
         self.collision_walls('vertical')
+        
+        # Aligning the rect of the enemy to the hitbox of the enemy
+        self.rect.center = self.hitbox.center
+        # Updating the position of the sensory lines
+        self.update_line_positions()
 
     # Checks for the collision of the Entity hitbox with the obstacles
     def collision_walls(self, direction):
@@ -57,7 +63,7 @@ class Enemy(Sprite):
                 self.sensory_lines[index] = line
             index += 1
                 
-
+    # Function to check whether the line overlaps with a rectangle and return the closest position
     def collide_detect(self, line, obstacle):
         # Use clipline to check for collision
         clipped_line = obstacle.rect.clipline(line[0], line[1])
@@ -68,4 +74,51 @@ class Enemy(Sprite):
             return start  # Return the first point where the line intersects with the rect
         else:
             return None  # Return None if no collision is detected
-    
+
+    # Function to detect the player
+    def player_detection(self, player):
+        for line in self.sensory_lines:
+            # Check for each line if it intersects with the player
+            player_found = self.collide_detect(line , player)
+            # If it intersect return True
+            if player_found != None:
+                return True
+        # if the player was not found return false
+        return False
+
+    # function to return the direction towards the player
+    def player_direction (self, player):
+        # Transforming the enemy and player position into a vector
+        enemy_location = pygame.math.Vector2(self.rect.center)
+        player_location = pygame.math.Vector2(player.rect.center)
+
+        # Getting the vector from the enemy to the player
+        direction = player_location-enemy_location
+        return direction
+
+    # A function that looks around the enemy and correctly reacts
+    def looking_around(self):
+        # Putting the limit of each sensory line to the start of a obstacle
+        self.obstacle_detection()
+        # Trying to detect the player
+
+    # Function to calculate the distance between the enemy and a different point
+    def distance(self, point2):
+        x1, y1 = self.rect.center
+        x2, y2 = point2
+        return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+
+    # Function to update the position of the lines
+    def update_line_positions(self):
+        starting_position = self.rect.center
+        self.sensory_lines = []
+        for i in range(self.amount_of_sensory_lines):
+            # Getting the point from the unit circle
+            angle = i * math.pi / (self.amount_of_sensory_lines / 2)
+            x = self.detection_range * math.cos(angle)
+            y = self.detection_range * math.sin(angle)
+            # Moving the point to the correct position compared to center of the enemy(starting point)
+            endpoint_x = starting_position[0] + x
+            endpoint_y = starting_position[1] + y
+            # Adding the lines to the list.
+            self.sensory_lines.append(((starting_position[0], starting_position[1]), (endpoint_x, endpoint_y), self.no_detection_colour))

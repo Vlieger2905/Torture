@@ -18,7 +18,7 @@ class Slime(Enemy):
         self.hitbox.center = self.rect.center
         self.type = "enemy"
         # Overworld stats
-        self.speed = 100
+        self.speed = 300
         self.first_frame = True
 
         self.obstacle_sprites = obstacle_sprites
@@ -26,18 +26,20 @@ class Slime(Enemy):
         # Stats
         self.level = level
 
-        # Detection lines
+        # Detection lines slime specifc settings
+        
+        self.detection_range = 300
+        self.amount_of_sensory_lines = 16
+        
         self.sensory_lines = []
-        amount_of_sensory_lines = 16
-        self.detection_range = 1000
         starting_position = self.rect.center
         self.no_detection_colour = (0,0,255)
         self.detected_colour = (255,0,0)
 
         # Calculate coordinates for each endpoint
-        for i in range(amount_of_sensory_lines):
+        for i in range(self.amount_of_sensory_lines):
             # Getting the point from the unit circle
-            angle = i * math.pi / (amount_of_sensory_lines / 2)
+            angle = i * math.pi / (self.amount_of_sensory_lines / 2)
             x = self.detection_range * math.cos(angle)
             y = self.detection_range * math.sin(angle)
             # Moving the point to the correct position compared to center of the enemy(starting point)
@@ -45,29 +47,28 @@ class Slime(Enemy):
             endpoint_y = starting_position[1] + y
             # Adding the lines to the list.
             self.sensory_lines.append(((starting_position[0], starting_position[1]), (endpoint_x, endpoint_y), self.no_detection_colour))
-        self.original_state_sensory = self.sensory_lines
 
-
-
-
-    def update(self,dt):
+    def update(self,dt, player):
         if self.first_frame is False:
-            # Try and find something
-            self.looking_around()
-
-            # If you found something go to the something
+            # Checking for the distance
+            player_distance = self.distance(player.rect.center)
+            # If the distance bewteen the player and the enemy is too big Make it that the enemy if not going to look for the player. 
+            if player_distance >= enemy_update_radius:
+                pass
+            
+            #if the distance is not too big, Try and find something
+            else:    
+                self.looking_around()
+                player_found = self.player_detection(player)
+                # If you found something go to the something
+                if player_found == True:
+                    self.direction = self.player_direction(player)
+                    # Move the enemy
+                    self.move(dt)
 
             # Other wise just keep waddling around
 
-            # Move the enemy
-            self.move(dt)
+            
         else:
             self.first_frame = False
-
-# A function that looks around the enemy and correctly reacts
-    def looking_around(self):
-        # Resetting the all the sensory lines to their original state
-        self.sensory_lines = self.original_state_sensory
-        # Putting the limit of each obstacle sprite to the start of a obstacle
-        self.obstacle_detection()
 
