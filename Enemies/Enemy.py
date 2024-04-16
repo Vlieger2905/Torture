@@ -6,26 +6,86 @@ from Game.settings import *
 
 # General class for information that every enemy will have
 class Enemy(Sprite):
-    def __init__(self):
+    def __init__(self, position, image, level, obstacle_sprites):
         super().__init__()
+        self.position = position
+        # Image and hitbox/rect specs
+        self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (Tilesize, Tilesize))
+        self.direction = pygame.math.Vector2()
+        self.redirection_vector = pygame.math.Vector2()
+        self.rect  = self.image.get_rect()
+        self.hitbox = self.rect.copy()
+        self.rect.center = self.position
+        self.hitbox.center = self.rect.center
+        # Type 
+        self.type = "enemy"
+        self.state = "idle"
+        # Obstacles to collide with
+        self.obstacle_sprites = obstacle_sprites
+        # Stats
+        self.level = level
         
         
     # Move the Entity
     def move(self, dt):
         # If the Entity is moving making sure that the velocity stays the same and that the Entity is not moving faster when moving diagonally
         if self.direction.magnitude() != 0:
+            changed_x = False
             self.direction = self.direction.normalize()
-        # Moving the Entity
-        move_vector = self.direction * self.speed * dt
-        self.hitbox.x +=move_vector.x
-        self.collision_walls('horizontal')
-        self.hitbox.y +=move_vector.y
-        self.collision_walls('vertical')
-        
+            # Moving the Entity
+            move_vector = self.direction * self.speed * dt
+            self.hitbox.x +=move_vector.x
+            # Checking if the enemy can move in the x- direction 
+            if self.collision_walls('horizontal'):
+                # Collision in x-direction nullifies that direction and increases the y direction to full
+                self.direction.x = 0
+                # If there is no vertical movement just return
+                if self.direction.magnitude() == 0:
+                    return
+                
+                self.direction = self.direction.normalize()
+                print(self.direction)
+                move_vector = self.direction * self.speed * dt
+                changed_x = True
+            
+            # Moving the enemy in the y direction
+            self.hitbox.y +=move_vector.y
+            # Check for vertical colission
+            if self.collision_walls('vertical'):
+                self.hitbox.center = self.rect.center
+                self.direction.y = 0
+                # If there is no horizontal return
+                if self.direction.magnitude() == 0:
+                    return
+                self.direction = self.direction.normalize()
+                # If there is collision on the y and there was already collision on the x just return and change state.
+                # The enemy is in a corner and should not be able to see the player
+                if changed_x:
+                    self.state = "searching"
+                else:
+                    print(self.direction)
+                    move_vector = self.direction * self.speed * dt
+                    self.hitbox.x = self.rect.x
+                    self.hitbox.x += move_vector.x
+                    # self.collision_walls('horizontal')
         # Aligning the rect of the enemy to the hitbox of the enemy
         self.rect.center = self.hitbox.center
-        # Updating the position of the sensory lines
-        self.update_line_positions()
+        
+
+    #TODO 
+    # Function to change the direction of the enemy when it gets closer to a wall
+    def redirect(self):
+        x_sum= 0
+        y_sum = 0
+        for line in self.sensory_lines:
+            x_sum += line[1][0]
+            y_sum += line[1][1]
+        # Getting the average endpoint of all the lines which is the coordinate of of the sum of all vectors
+        end_point = x_sum / len(self.sensory_lines), y_sum / len(self.sensory_lines)
+        # Putting the vector in the correct place
+        end_point = end_point[0] - self.rect.center[0], end_point[1] - self.rect.center[1]
+        self.redirection_vector = pygame.math.Vector2(end_point)
 
     # Checks for the collision of the Entity hitbox with the obstacles
     def collision_walls(self, direction):
@@ -35,7 +95,9 @@ class Enemy(Sprite):
                     if self.direction.x > 0: #Moving to the rigth
                         self.hitbox.right = sprite.hitbox.left
                     elif self.direction.x < 0: #Moving to the left
-                        self.hitbox.left = sprite.hitbox.right           
+                        self.hitbox.left = sprite.hitbox.right    
+
+                    return sprite       
 
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
@@ -44,6 +106,8 @@ class Enemy(Sprite):
                         self.hitbox.bottom = sprite.hitbox.top
                     elif self.direction.y < 0: #Moving up
                         self.hitbox.top = sprite.hitbox.bottom
+                    
+                    return sprite
     
     # Function to change the length of the sensory lines to either the detection range if there is not an obstacle in the way. Or to the side of the closest obstacle.
     def obstacle_detection(self):
@@ -90,17 +154,24 @@ class Enemy(Sprite):
     def player_direction (self, player):
         # Transforming the enemy and player position into a vector
         enemy_location = pygame.math.Vector2(self.rect.center)
-        player_location = pygame.math.Vector2(player.rect.center)
+        player_location = pygame.math.Vector2(player.hitbox.center)
 
         # Getting the vector from the enemy to the player
         direction = player_location-enemy_location
+
         return direction
 
     # A function that looks around the enemy and correctly reacts
-    def looking_around(self):
+    def looking_around(self,player):
+        # Updating the position of the sensory lines
+        self.update_line_positions()
         # Putting the limit of each sensory line to the start of a obstacle
         self.obstacle_detection()
         # Trying to detect the player
+        player_detected = self.player_detection(player)
+        # If the player has been found move to the player
+        if player_detected:
+            return "player found"
 
     # Function to calculate the distance between the enemy and a different point
     def distance(self, point2):
