@@ -39,19 +39,11 @@ class Level:
         self.player.spawn(entry_point,self.obstacle_sprites, self.exit_points)
         # Add player to visible_sprites group
         self.visible_sprites.add(self.player)
-<<<<<<< HEAD
 
         #Creating the enemies in the level
         self.enemy = Slime((6978,1814),"Sprites\Enemies\Slime.png", 1, self.obstacle_sprites)
         self.visible_sprites.add(self.enemy)
 
-=======
-        for i in range(5):
-            #Creating the enemies in the level
-            self.enemy = Slime((6978,1814), "Sprites\Enemies\Slime.png", 1, self.obstacle_sprites)
-            self.visible_sprites.add(self.enemy)
-# Getting the correct files to load all the different files for this level
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
 

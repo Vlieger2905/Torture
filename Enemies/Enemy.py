@@ -6,11 +6,7 @@ from Game.settings import *
 
 # General class for information that every enemy will have
 class Enemy(Sprite):
-<<<<<<< HEAD
-    def __init__(self,position, image, level, obstacle_sprites):
-=======
     def __init__(self, position, image, level, obstacle_sprites):
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
         super().__init__()
         self.position = position
         # Image and hitbox/rect specs
@@ -22,86 +18,31 @@ class Enemy(Sprite):
         self.hitbox = self.rect.copy()
         self.rect.center = self.position
         self.hitbox.center = self.rect.center
-<<<<<<< HEAD
-        # Type and state
-=======
         # Type 
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
         self.type = "enemy"
         self.state = "idle"
         # Obstacles to collide with
         self.obstacle_sprites = obstacle_sprites
         # Stats
         self.level = level
-<<<<<<< HEAD
-=======
         
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
         
     # Move the Entity
     def move(self, dt):
         # If the Entity is moving making sure that the velocity stays the same and that the Entity is not moving faster when moving diagonally
         if self.direction.magnitude() != 0:
-            changed_x = False
             self.direction = self.direction.normalize()
-<<<<<<< HEAD
-        # Moving the Entity
-        move_vector = self.direction * self.speed * dt
-        self.hitbox.x +=move_vector.x
-        self.collision_walls('horizontal')
-        self.hitbox.y +=move_vector.y
-        self.collision_walls('vertical')
-        
-        # Moving the Entity
-        move_vector = self.direction * self.speed * dt
-        self.hitbox.x +=move_vector.x
-        self.collision_walls('horizontal')
-        self.hitbox.y +=move_vector.y
-        self.collision_walls('vertical')
-        
-        # Aligning the rect of the enemy to the hitbox of the enemy
-        self.rect.center = self.hitbox.center
-        # Updating the position of the sensory lines
-        self.update_line_positions()
-        # Updating the position of the sensory lines
-        self.update_line_positions()
-=======
             # Moving the Entity
             move_vector = self.direction * self.speed * dt
+            # horizontal movement
             self.hitbox.x +=move_vector.x
             # Checking if the enemy can move in the x- direction 
-            if self.collision_walls('horizontal'):
-                # Collision in x-direction nullifies that direction and increases the y direction to full
-                self.direction.x = 0
-                # If there is no vertical movement just return
-                if self.direction.magnitude() == 0:
-                    return
-                
-                self.direction = self.direction.normalize()
-                print(self.direction)
-                move_vector = self.direction * self.speed * dt
-                changed_x = True
+            self.collision_walls('horizontal')
             
             # Moving the enemy in the y direction
             self.hitbox.y +=move_vector.y
             # Check for vertical colission
-            if self.collision_walls('vertical'):
-                self.hitbox.center = self.rect.center
-                self.direction.y = 0
-                # If there is no horizontal return
-                if self.direction.magnitude() == 0:
-                    return
-                self.direction = self.direction.normalize()
-                # If there is collision on the y and there was already collision on the x just return and change state.
-                # The enemy is in a corner and should not be able to see the player
-                if changed_x:
-                    self.state = "searching"
-                else:
-                    print(self.direction)
-                    move_vector = self.direction * self.speed * dt
-                    self.hitbox.x = self.rect.x
-                    self.hitbox.x += move_vector.x
-                    # self.collision_walls('horizontal')
+            self.collision_walls('vertical')
         # Aligning the rect of the enemy to the hitbox of the enemy
         self.rect.center = self.hitbox.center
         
@@ -119,7 +60,6 @@ class Enemy(Sprite):
         # Putting the vector in the correct place
         end_point = end_point[0] - self.rect.center[0], end_point[1] - self.rect.center[1]
         self.redirection_vector = pygame.math.Vector2(end_point)
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
 
     # Checks for the collision of the Entity hitbox with the obstacles
     def collision_walls(self, direction):
@@ -129,14 +69,9 @@ class Enemy(Sprite):
                     if self.direction.x > 0: #Moving to the rigth
                         self.hitbox.right = sprite.hitbox.left
                     elif self.direction.x < 0: #Moving to the left
-<<<<<<< HEAD
-                        self.hitbox.left = sprite.hitbox.right           
-                        self.hitbox.left = sprite.hitbox.right           
-=======
                         self.hitbox.left = sprite.hitbox.right    
 
                     return sprite       
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
 
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
@@ -193,12 +128,7 @@ class Enemy(Sprite):
     def player_direction (self, player):
         # Transforming the enemy and player position into a vector
         enemy_location = pygame.math.Vector2(self.rect.center)
-<<<<<<< HEAD
-        player_location = pygame.math.Vector2(player.rect.center)
-        player_location = pygame.math.Vector2(player.rect.center)
-=======
         player_location = pygame.math.Vector2(player.hitbox.center)
->>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
 
         # Getting the vector from the enemy to the player
         direction = player_location-enemy_location
