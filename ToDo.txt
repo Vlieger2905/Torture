@@ -17,8 +17,6 @@ Programming:
     PLayer stats
         Leveling system
     Enemy AI
-        Walk around corners
-        Chase longer after the player then just their vision range
     Enemy spawn
     Save/load (partly finished expand as needed)
     Combat system

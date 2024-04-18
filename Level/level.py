@@ -39,11 +39,11 @@ class Level:
         self.player.spawn(entry_point,self.obstacle_sprites, self.exit_points)
         # Add player to visible_sprites group
         self.visible_sprites.add(self.player)
-        for i in range(5):
-            #Creating the enemies in the level
-            self.enemy = Slime((6978,1814), "Sprites\Enemies\Slime.png", 1, self.obstacle_sprites)
-            self.visible_sprites.add(self.enemy)
-# Getting the correct files to load all the different files for this level
+
+        #Creating the enemies in the level
+        self.enemy = Slime((6978,1814),1, self.obstacle_sprites)
+        self.visible_sprites.add(self.enemy)
+
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
 
@@ -65,9 +65,6 @@ class Level:
                     matching_files.append(combined_path)
 
         return matching_files[0]
-
-    # def drop_breadcrumps(self):
-# TODO
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()
@@ -112,6 +109,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            debug((self.enemy.rect.center[0] - self.player.rect.center[0],self.enemy.rect.center[1] - self.player.rect.center[1] ))
+            debug(self.enemy.rect.center)
             clock.tick(settings.FPS)
             pygame.display.update()

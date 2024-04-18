@@ -1,4 +1,0 @@
-different possible states:
-    Hunting 
-    Idle
-    Roaming
