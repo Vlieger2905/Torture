@@ -5,6 +5,7 @@ from .Enemy import *
 
 
 class Slime(Enemy):
+<<<<<<< HEAD
     def __init__(self, position,image, level, obstacle_sprites):
         super().__init__(position, image, level, obstacle_sprites)
         # Attribute
@@ -14,10 +15,20 @@ class Slime(Enemy):
         self.first_frame = True
 
         self.obstacle_sprites = obstacle_sprites
+=======
+    def __init__(self, position, image, level, obstacle_sprites):
+        super().__init__(position, image, level, obstacle_sprites)
+        # Attribute
+        
+        # Overworld stats
+        self.speed = 300
+        self.first_frame = True
+>>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
         self.hitbox = self.hitbox.inflate(-10,-10)
         self.hitbox.center = self.rect.center
 
         # Stats
+<<<<<<< HEAD
         self.level = level
          # TODO Initiate the stats of the enemy
 
@@ -32,6 +43,17 @@ class Slime(Enemy):
         self.detected_colour = (255,0,0)
         self.no_detection_colour = (0,0,255)
         self.detected_colour = (255,0,0)
+=======
+        # TODO Initiate the stats of the enemy
+
+        # Detection lines slime specifc settings        
+        self.detection_range = 300
+        self.amount_of_sensory_lines = 32
+        
+        self.sensory_lines = []
+        starting_position = self.rect.center
+        self.no_detection_colour = (0,255,255)
+>>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
 
         # Calculate coordinates for each endpoint
         for i in range(self.amount_of_sensory_lines):
@@ -51,6 +73,7 @@ class Slime(Enemy):
             player_distance = self.distance(player.rect.center)
             # If the distance bewteen the player and the enemy is too big Make it that the enemy if not going to look for the player. 
             if player_distance >= enemy_update_radius:
+<<<<<<< HEAD
                 pass
                 pass
             
@@ -60,14 +83,30 @@ class Slime(Enemy):
                 player_found = self.player_detection(player)
                 self.looking_around()
                 player_found = self.player_detection(player)
+=======
+                self.state = "idle"
+            
+            #if the distance is not too big, Try and find something
+            else:    
+                results = self.looking_around(player)
+>>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
                 # If you found something go to the something
-                if player_found == True:
+                
+                # If the player is seen
+                if results == "player found":
                     self.direction = self.player_direction(player)
+                    self.state = "hunting"
                     # Move the enemy
                     self.move(dt)
 
+<<<<<<< HEAD
             # Other wise just keep waddling around
             # Other wise just keep waddling around
+=======
+                # Other wise just keep waddling around
+                else: 
+                    pass
+>>>>>>> parent of 5eeaf4e (Revert "	modified:   Enemies/Enemy.py")
 
             
         else:
