@@ -5,29 +5,23 @@ from .Enemy import *
 
 
 class Slime(Enemy):
-    def __init__(self, position, level, obstacle_sprites):
-        super().__init__()
+    def __init__(self, position,image, level, obstacle_sprites):
+        super().__init__(position, image, level, obstacle_sprites)
         # Attribute
-        self.position = position
-        self.image = pygame.image.load("Sprites\Enemies\Slime2.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (Tilesize, Tilesize))
-        self.direction = pygame.math.Vector2()
-        self.rect  = self.image.get_rect()
-        self.hitbox = self.rect.copy()
-        self.rect.center = self.position
-        self.hitbox.center = self.rect.center
-        self.type = "enemy"
+
         # Overworld stats
         self.speed = 300
         self.first_frame = True
 
         self.obstacle_sprites = obstacle_sprites
+        self.hitbox = self.hitbox.inflate(-10,-10)
+        self.hitbox.center = self.rect.center
 
         # Stats
         self.level = level
+         # TODO Initiate the stats of the enemy
 
         # Detection lines slime specifc settings
-        
         self.detection_range = 300
         self.amount_of_sensory_lines = 16
         

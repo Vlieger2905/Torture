@@ -6,9 +6,25 @@ from Game.settings import *
 
 # General class for information that every enemy will have
 class Enemy(Sprite):
-    def __init__(self):
+    def __init__(self, position, image, level, obstacle_sprites):
         super().__init__()
-        
+        self.position = position
+        # Image and hitbox/rect specs
+        self.image = pygame.image.load(image).convert_alpha()
+        self.image = pygame.transform.scale(self.image, (Tilesize, Tilesize))
+        self.direction = pygame.math.Vector2()
+        self.redirection_vector = pygame.math.Vector2()
+        self.rect  = self.image.get_rect()
+        self.hitbox = self.rect.copy()
+        self.rect.center = self.position
+        self.hitbox.center = self.rect.center
+        # Type and state
+        self.type = "enemy"
+        self.state = "idle"
+        # Obstacles to collide with
+        self.obstacle_sprites = obstacle_sprites
+        # Stats
+        self.level = level
         
     # Move the Entity
     def move(self, dt):
