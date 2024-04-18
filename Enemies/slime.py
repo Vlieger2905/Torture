@@ -24,9 +24,12 @@ class Slime(Enemy):
         # Detection lines slime specifc settings
         self.detection_range = 300
         self.amount_of_sensory_lines = 16
+        self.amount_of_sensory_lines = 16
         
         self.sensory_lines = []
         starting_position = self.rect.center
+        self.no_detection_colour = (0,0,255)
+        self.detected_colour = (255,0,0)
         self.no_detection_colour = (0,0,255)
         self.detected_colour = (255,0,0)
 
@@ -49,9 +52,12 @@ class Slime(Enemy):
             # If the distance bewteen the player and the enemy is too big Make it that the enemy if not going to look for the player. 
             if player_distance >= enemy_update_radius:
                 pass
+                pass
             
             #if the distance is not too big, Try and find something
             else:    
+                self.looking_around()
+                player_found = self.player_detection(player)
                 self.looking_around()
                 player_found = self.player_detection(player)
                 # If you found something go to the something
@@ -60,6 +66,7 @@ class Slime(Enemy):
                     # Move the enemy
                     self.move(dt)
 
+            # Other wise just keep waddling around
             # Other wise just keep waddling around
 
             

@@ -6,7 +6,7 @@ from Game.settings import *
 
 # General class for information that every enemy will have
 class Enemy(Sprite):
-    def __init__(self, position, image, level, obstacle_sprites):
+    def __init__(self,position, image, level, obstacle_sprites):
         super().__init__()
         self.position = position
         # Image and hitbox/rect specs
@@ -38,8 +38,17 @@ class Enemy(Sprite):
         self.hitbox.y +=move_vector.y
         self.collision_walls('vertical')
         
+        # Moving the Entity
+        move_vector = self.direction * self.speed * dt
+        self.hitbox.x +=move_vector.x
+        self.collision_walls('horizontal')
+        self.hitbox.y +=move_vector.y
+        self.collision_walls('vertical')
+        
         # Aligning the rect of the enemy to the hitbox of the enemy
         self.rect.center = self.hitbox.center
+        # Updating the position of the sensory lines
+        self.update_line_positions()
         # Updating the position of the sensory lines
         self.update_line_positions()
 
@@ -51,6 +60,7 @@ class Enemy(Sprite):
                     if self.direction.x > 0: #Moving to the rigth
                         self.hitbox.right = sprite.hitbox.left
                     elif self.direction.x < 0: #Moving to the left
+                        self.hitbox.left = sprite.hitbox.right           
                         self.hitbox.left = sprite.hitbox.right           
 
         if direction == 'vertical':
@@ -106,6 +116,7 @@ class Enemy(Sprite):
     def player_direction (self, player):
         # Transforming the enemy and player position into a vector
         enemy_location = pygame.math.Vector2(self.rect.center)
+        player_location = pygame.math.Vector2(player.rect.center)
         player_location = pygame.math.Vector2(player.rect.center)
 
         # Getting the vector from the enemy to the player
