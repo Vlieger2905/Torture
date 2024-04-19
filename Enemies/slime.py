@@ -20,7 +20,7 @@ class Slime(Enemy):
 
         # Detection lines slime specifc settings        
         self.detection_range = 300
-        self.amount_of_sensory_lines = 32
+        self.amount_of_sensory_lines = 64
         
         self.sensory_lines = []
         starting_position = self.rect.center

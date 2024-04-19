@@ -47,19 +47,10 @@ class Enemy(Sprite):
         self.rect.center = self.hitbox.center
         
 
-    #TODO 
-    # Function to change the direction of the enemy when it gets closer to a wall
-    def redirect(self):
-        x_sum= 0
-        y_sum = 0
-        for line in self.sensory_lines:
-            x_sum += line[1][0]
-            y_sum += line[1][1]
-        # Getting the average endpoint of all the lines which is the coordinate of of the sum of all vectors
-        end_point = x_sum / len(self.sensory_lines), y_sum / len(self.sensory_lines)
-        # Putting the vector in the correct place
-        end_point = end_point[0] - self.rect.center[0], end_point[1] - self.rect.center[1]
-        self.redirection_vector = pygame.math.Vector2(end_point)
+    # WORKING ON pathfinding
+    # TODO
+    def pathfinding(self):
+        pass
 
     # Checks for the collision of the Entity hitbox with the obstacles
     def collision_walls(self, direction):
