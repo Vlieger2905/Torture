@@ -41,7 +41,7 @@ class Level:
         self.visible_sprites.add(self.player)
 
         #Creating the enemies in the level
-        self.enemy = Slime((6978,1814),"Sprites\Enemies\Slime.png", 1, self.obstacle_sprites)
+        self.enemy = Slime((6978,1814),"Sprites\Enemies\Slime.png", 1, self.obstacle_sprites,self.tmx_file)
         self.visible_sprites.add(self.enemy)
 
     def get_files_by_extension(self, folder_path, extensions):

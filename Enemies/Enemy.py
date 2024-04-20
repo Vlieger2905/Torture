@@ -1,12 +1,19 @@
 import numpy as np
 import math, random, pygame
+# Imports for the pathfinding
+from pathfinding.core.diagonal_movement import DiagonalMovement
+from pathfinding.core.grid import Grid
+from pathfinding.core.node import Node
+from pathfinding.finder.a_star import AStarFinder
+from Enemies.Making_Grid import *
+# Self made files to import from
 from pygame.sprite import Sprite
 from Game.settings import *
 
 
 # General class for information that every enemy will have
 class Enemy(Sprite):
-    def __init__(self, position, image, level, obstacle_sprites):
+    def __init__(self, position, image, level, obstacle_sprites, tmx_file_path):
         super().__init__()
         self.position = position
         # Image and hitbox/rect specs
@@ -18,6 +25,14 @@ class Enemy(Sprite):
         self.hitbox = self.rect.copy()
         self.rect.center = self.position
         self.hitbox.center = self.rect.center
+
+        # Defining items for the pathfinding ability of all enemies
+        self.grid = self.create_grid(tmx_file_path)
+        # Pathfinder where diagonal movement is allowed when there is are nog obstacles next to the movement
+        self.finder = AStarFinder(diagonal_movement = DiagonalMovement.only_when_no_obstacle)
+        # Path to follow
+        self.path = []
+
         # Type 
         self.type = "enemy"
         self.state = "idle"
@@ -49,8 +64,38 @@ class Enemy(Sprite):
 
     # WORKING ON pathfinding
     # TODO
-    def pathfinding(self):
-        pass
+    def pathfinding(self, player):
+        # Starting point
+        start_x = self.rect.centerx // Tilesize
+        start_y = self.rect.centery // Tilesize
+        start = self.grid.node(start_x,start_y)
+        # End point
+        end_x = player.rect.centerx // Tilesize
+        end_y = player.rect.centery // Tilesize
+        end = self.grid.node(end_x,end_y)
+
+        # Pathfinding
+        path, runs = self.finder.find_path(start, end, self.grid)
+        self.grid.cleanup()
+
+    # Getting the coordinates of each point in the path
+    def create_collision_rects(self, path):
+        if path: 
+            temp = []   
+            for point in path:
+                position = point.x, point.y
+                position = (position[0]*Tilesize)+ (Tilesize/2), (position[1]*Tilesize)+ (Tilesize/2)
+                temp.append(pygame.Rect(position[0]-2,position[1]-2, 4, 4))
+            self.path = temp
+
+
+    def create_grid(self, tmx_file_path):
+        # Transforming tmx data to a 2d list
+        matrix = tmx_to_grid(tmx_file_path)
+        # Use the matrix to create a actual grid for the pathfinding algorithme
+        grid = Grid(matrix=matrix)
+        return grid
+
 
     # Checks for the collision of the Entity hitbox with the obstacles
     def collision_walls(self, direction):
@@ -116,22 +161,23 @@ class Enemy(Sprite):
         return False
 
     # function to return the direction towards the player
-    def player_direction (self, player):
+    def get_direction (self, point):
         # Transforming the enemy and player position into a vector
         enemy_location = pygame.math.Vector2(self.rect.center)
-        player_location = pygame.math.Vector2(player.hitbox.center)
+        target_location = pygame.math.Vector2(point)
 
         # Getting the vector from the enemy to the player
-        direction = player_location-enemy_location
+        direction = target_location-enemy_location
 
         return direction
 
-    # A function that looks around the enemy and correctly reacts
+    # A function updates the vision of the enemy and returns if is sees anything special
     def looking_around(self,player):
         # Updating the position of the sensory lines
         self.update_line_positions()
         # Putting the limit of each sensory line to the start of a obstacle
         self.obstacle_detection()
+        
         # Trying to detect the player
         player_detected = self.player_detection(player)
         # If the player has been found move to the player

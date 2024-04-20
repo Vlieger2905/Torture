@@ -5,8 +5,8 @@ from .Enemy import *
 
 
 class Slime(Enemy):
-    def __init__(self, position, image, level, obstacle_sprites):
-        super().__init__(position, image, level, obstacle_sprites)
+    def __init__(self, position, image, level, obstacle_sprites,tmx_file):
+        super().__init__(position, image, level, obstacle_sprites,tmx_file)
         # Attribute
         
         # Overworld stats
@@ -53,10 +53,11 @@ class Slime(Enemy):
                 
                 # If the player is seen
                 if results == "player found":
-                    self.direction = self.player_direction(player)
+                    self.direction = self.get_direction(player.hitbox.center)
                     self.state = "hunting"
                     # Move the enemy
                     self.move(dt)
+                    self.pathfinding(player)
 
                 # Other wise just keep waddling around
                 else: 
