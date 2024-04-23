@@ -46,7 +46,7 @@ def tmx_to_grid(file_path):
         return parsed_data
             
     else:
-        print("Layer with ID {} not found.".format(layer_name))
+        print("Layer with Name {} not found.".format(layer_name))
 
 
 # print(tmx_to_grid("Map Data//Test Center//testMap.tmx"))

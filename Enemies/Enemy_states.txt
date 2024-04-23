@@ -1,2 +1,3 @@
 "idle" == Wandering about in a area and looking around if they find anything 
-"
+"attacking" ==  Aproaching the player to initiate combat
+"hunting" == Trying to find the player based on its last seen location when vision of the player is lost

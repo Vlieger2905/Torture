@@ -25,6 +25,7 @@ class Enemy(Sprite):
         self.hitbox = self.rect.copy()
         self.rect.center = self.position
         self.hitbox.center = self.rect.center
+        self.time_passed_pathfinding = 0
 
         # Defining items for the pathfinding ability of all enemies
         self.grid = self.create_grid(tmx_file_path)
@@ -32,6 +33,7 @@ class Enemy(Sprite):
         self.finder = AStarFinder(diagonal_movement = DiagonalMovement.only_when_no_obstacle)
         # Path to follow
         self.path = []
+
 
         # Type 
         self.type = "enemy"
@@ -62,7 +64,7 @@ class Enemy(Sprite):
         self.rect.center = self.hitbox.center
         
 
-    # WORKING ON pathfinding
+    # Pathfinding
     # TODO
     def pathfinding(self, player):
         # Starting point
@@ -78,24 +80,27 @@ class Enemy(Sprite):
         path, runs = self.finder.find_path(start, end, self.grid)
         self.grid.cleanup()
 
+        return path
+
     # Getting the coordinates of each point in the path
     def create_collision_rects(self, path):
         if path: 
-            temp = []   
+            temp = []
+            del path[0]   
+
             for point in path:
                 position = point.x, point.y
                 position = (position[0]*Tilesize)+ (Tilesize/2), (position[1]*Tilesize)+ (Tilesize/2)
                 temp.append(pygame.Rect(position[0]-2,position[1]-2, 4, 4))
             self.path = temp
 
-
+    # Creating the grid for the pathfinder the grid is the entire level and only the barrier layer
     def create_grid(self, tmx_file_path):
         # Transforming tmx data to a 2d list
         matrix = tmx_to_grid(tmx_file_path)
         # Use the matrix to create a actual grid for the pathfinding algorithme
         grid = Grid(matrix=matrix)
         return grid
-
 
     # Checks for the collision of the Entity hitbox with the obstacles
     def collision_walls(self, direction):
@@ -204,3 +209,6 @@ class Enemy(Sprite):
             endpoint_y = starting_position[1] + y
             # Adding the lines to the list.
             self.sensory_lines.append(((starting_position[0], starting_position[1]), (endpoint_x, endpoint_y), self.no_detection_colour))
+
+    def update(self,dt, player):
+        pass

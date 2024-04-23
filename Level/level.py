@@ -10,7 +10,7 @@ from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
 from .load_exit import load_exit
-from Enemies.slime import Slime
+from Enemies.Party import Enemy_Party
 
 class Level:
     def __init__(self, level_map, entry_point, player):
@@ -41,7 +41,7 @@ class Level:
         self.visible_sprites.add(self.player)
 
         #Creating the enemies in the level
-        self.enemy = Slime((6978,1814),"Sprites\Enemies\Slime.png", 1, self.obstacle_sprites,self.tmx_file)
+        self.enemy = Enemy_Party((6978,1814),"Sprites\Enemies\Slime.png", 1, self.obstacle_sprites,self.tmx_file)
         self.visible_sprites.add(self.enemy)
 
     def get_files_by_extension(self, folder_path, extensions):
@@ -66,8 +66,9 @@ class Level:
 
         return matching_files[0]
 
-    # def drop_breadcrumps(self):
-# TODO
+# TODO 
+    def load_enemies(self):
+        pass
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()
@@ -112,6 +113,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            debug((self.enemy.rect.center[0] - self.player.rect.center[0],self.enemy.rect.center[1] - self.player.rect.center[1] ))
+            # debug((self.enemy.rect.center[0] - self.player.rect.center[0],self.enemy.rect.center[1] - self.player.rect.center[1] ))
             clock.tick(settings.FPS)
             pygame.display.update()
