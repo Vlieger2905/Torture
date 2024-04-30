@@ -1,4 +1,4 @@
-import pygame,sys,os
+import pygame,sys,os, json
 from pygame.sprite import Group
 from Game import settings
 from Game import dt as detalTime
@@ -41,8 +41,7 @@ class Level:
         self.visible_sprites.add(self.player)
 
         #Creating the enemies in the level
-        self.enemy = Enemy_Party((6978,1814),"Sprites\Enemies\Slime.png", 1, self.obstacle_sprites,self.tmx_file)
-        self.visible_sprites.add(self.enemy)
+        self.load_enemies(self.json_file)
 
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
@@ -67,8 +66,17 @@ class Level:
         return matching_files[0]
 
 # TODO 
-    def load_enemies(self):
-        pass
+    def load_enemies(self, json_file):
+        # Reading the data from the json file
+        with open(json_file, 'r') as file:
+            data = json.load(file)
+        # Loading and saving the information of each enemy in the enemy list for this level
+        enemy_list = data.get("enemies", [])
+        for enemy in enemy_list:
+            party_leader = enemy["leader"]
+            party_members = enemy.get("party_members", "")
+            position = (enemy["position"]["x"], enemy["position"]["y"])
+            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file))
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()
@@ -113,6 +121,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            # debug((self.enemy.rect.center[0] - self.player.rect.center[0],self.enemy.rect.center[1] - self.player.rect.center[1] ))
-            clock.tick(settings.FPS)
+            debug(clock.get_fps())
+            clock.tick()
             pygame.display.update()

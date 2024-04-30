@@ -11,4 +11,4 @@ item_size = 16
 item_display_size = 48
 
 enemy_update_radius = 1500
-enemy_pathfinding_time = 0.01
+enemy_pathfinding_time = 0.2

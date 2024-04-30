@@ -34,7 +34,6 @@ class Enemy(Sprite):
         # Path to follow
         self.path = []
 
-
         # Type 
         self.type = "enemy"
         self.state = "idle"
@@ -65,15 +64,14 @@ class Enemy(Sprite):
         
 
     # Pathfinding
-    # TODO
     def pathfinding(self, player):
         # Starting point
         start_x = self.rect.centerx // Tilesize
         start_y = self.rect.centery // Tilesize
         start = self.grid.node(start_x,start_y)
         # End point
-        end_x = player.rect.centerx // Tilesize
-        end_y = player.rect.centery // Tilesize
+        end_x = player.hitbox.centerx // Tilesize
+        end_y = player.hitbox.centery // Tilesize
         end = self.grid.node(end_x,end_y)
 
         # Pathfinding
@@ -131,6 +129,8 @@ class Enemy(Sprite):
         for line in self.sensory_lines:
             updated = False
             for object in self.obstacle_sprites:
+                if self.distance(object.rect.center)>= self.detection_range:
+                    continue
                 # Save the result in endpoint
                 end_point = self.collide_detect(line, object)
             

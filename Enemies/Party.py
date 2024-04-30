@@ -15,13 +15,12 @@ class Enemy_Party(Enemy):
         self.hitbox = self.hitbox.inflate(-(self.hitbox.width * 0.45),-(self.hitbox.height * 0.45))
         self.hitbox.center = self.rect.center
 
-        # Stats
-        # TODO Initiate the stats of the enemy
-
+        # Enemies that are inside the party
+        
         # Detection lines slime specifc settings        
         self.detection_range = 300
         self.amount_of_sensory_lines = 32
-        
+        self.new_path = False
         self.sensory_lines = []
         starting_position = self.rect.center
         self.no_detection_colour = (0,255,255)
@@ -66,6 +65,7 @@ class Enemy_Party(Enemy):
 # Act according to the  state it is in
             # Check for the different states enemy and act accordingly
             if self.state == "idle":
+                self.new_path = False
                 #  If there is still a path to the player location keep following that path
                 if self.path:
                     self.state = "hunting"
@@ -83,6 +83,7 @@ class Enemy_Party(Enemy):
                     for rect in self.path:
                         if self.hitbox.colliderect(rect):
                             # If the point has been reached delete the point and walk to the next point
+                            self.new_path = False
                             del self.path[0]
                             break
                 else:
@@ -93,6 +94,7 @@ class Enemy_Party(Enemy):
                 if self.time_passed_pathfinding >= enemy_pathfinding_time or self.path == []:
                     # Do pathfinding
                     path = self.pathfinding(player)
+                    self.new_path = True
                     # Update the path
                     self.create_collision_rects(path)
                     # Reset the pathfinding time
@@ -109,6 +111,7 @@ class Enemy_Party(Enemy):
                         if self.hitbox.colliderect(rect):
                             # If the point has been reached delete the point and walk to the next point
                             del self.path[0]
+                            self.new_path = False
                             break        
             # add dt to the pathfinding time 
             self.time_passed_pathfinding += dt

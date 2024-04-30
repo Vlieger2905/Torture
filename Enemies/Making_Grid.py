@@ -47,6 +47,3 @@ def tmx_to_grid(file_path):
             
     else:
         print("Layer with Name {} not found.".format(layer_name))
-
-
-# print(tmx_to_grid("Map Data//Test Center//testMap.tmx"))
