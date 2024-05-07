@@ -14,8 +14,6 @@ class Button():
             if size is not None:
                 self.image = pygame.transform.scale(self.image, size)
             self.rect.size = self.image.get_size()   
-        # else:
-        #     self.rect.size = size
         self.rect.topleft = position
 
     def draw(self, screen):

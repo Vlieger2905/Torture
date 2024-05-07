@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         # Setting the player hitbox
         self.hitbox = self.rect.copy()
         # Rescaling the hitbox of the player to fit the player character
-        self.hitbox= self.hitbox.inflate(-(self.hitbox.width * 0.45),-(self.hitbox.height * 0.95))
+        self.hitbox= self.hitbox.inflate(-(self.hitbox.width * 0.45),-(self.hitbox.height * 0.8))
         self.hitbox.centerx = self.rect.centerx
         self.hitbox.centery = self.rect.bottom + (self.rect.height * 0.05)
         # Variables used within the player class
@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         # Defining the player inventory
         self.inventory = Inventory(item_list, player_items)
         
-# loading the stats of the charachter into the playerclass
+    # loading the stats of the charachter into the playerclass
         
         # Player stats
         self.level = stats.get("level", 1)
@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
         self.aligment() 
         self.obstacle_sprites = obstacle_sprites
         self.exit_rects = exits 
-        self.first_frame = True      
+        self.first_frame = True    
     # Retrieving the player stats to save
     def get_stats(self):
         stats = {
@@ -193,7 +193,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = self.hitbox.centerx
         self.rect.centery = self.hitbox.centery - (self.rect.height * 0.3)
 
-    def update(self,dt):
+    def update(self,dt, just_ignore_this_variable):
         if self.first_frame is False:
             self.input()
             self.move(dt)

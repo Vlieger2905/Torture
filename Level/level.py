@@ -1,4 +1,4 @@
-import pygame,sys,os
+import pygame,sys,os, json
 from pygame.sprite import Group
 from Game import settings
 from Game import dt as detalTime
@@ -10,6 +10,7 @@ from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
 from .load_exit import load_exit
+from Enemies.Party import Enemy_Party
 
 class Level:
     def __init__(self, level_map, entry_point, player):
@@ -39,6 +40,9 @@ class Level:
         # Add player to visible_sprites group
         self.visible_sprites.add(self.player)
 
+        #Creating the enemies in the level
+        self.load_enemies(self.json_file, self.player)
+
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
 
@@ -60,6 +64,19 @@ class Level:
                     matching_files.append(combined_path)
 
         return matching_files[0]
+
+# TODO 
+    def load_enemies(self, json_file, player):
+        # Reading the data from the json file
+        with open(json_file, 'r') as file:
+            data = json.load(file)
+        # Loading and saving the information of each enemy in the enemy list for this level
+        enemy_list = data.get("enemies", [])
+        for enemy in enemy_list:
+            party_leader = enemy["leader"]
+            party_members = enemy.get("party_members", "")
+            position = (enemy["position"]["x"], enemy["position"]["y"])
+            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file, player))
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()
@@ -96,7 +113,7 @@ class Level:
 
             self.display_surface.fill('white')
             self.visible_sprites.custom_draw(self.player)
-            self.visible_sprites.update(dt)
+            self.visible_sprites.update(dt, self.player)
 
             # Checking if the player collides with a exit point on the map and the returns the next level and the point the player should spawn
             exit = self.player.collision_exit()
@@ -104,6 +121,6 @@ class Level:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
 
-            # debug(self.player.world_speed)
-            clock.tick(settings.FPS)
+            debug(clock.get_fps())
+            clock.tick()
             pygame.display.update()
