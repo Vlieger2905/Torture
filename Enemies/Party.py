@@ -5,7 +5,7 @@ from .Enemy import *
 
 
 class Enemy_Party(Enemy):
-    def __init__(self, position, image, level, obstacle_sprites,tmx_file):
+    def __init__(self, position, image, level, obstacle_sprites,tmx_file, player):
         super().__init__(position, image, level, obstacle_sprites,tmx_file)
         # Attribute
         
@@ -16,19 +16,33 @@ class Enemy_Party(Enemy):
         self.hitbox.center = self.rect.center
 
         # Enemies that are inside the party
+        # TODO
         
         # Detection lines slime specifc settings        
-        self.detection_range = 300
-        self.amount_of_sensory_lines = 32
+        self.detection_range = 600
+        self.amount_of_sensory_lines = 8
         self.new_path = False
         self.sensory_lines = []
         starting_position = self.rect.center
+        player_angle = math.atan2(( player.rect.centery- starting_position[1]),(player.rect.centerx - starting_position[0]))
         self.no_detection_colour = (0,255,255)
 
         # Calculate coordinates for each endpoint
-        for i in range(self.amount_of_sensory_lines):
+        for i in range(int(self.amount_of_sensory_lines/2)):
+            # For the positive angle for the direct line to the player
+            angle =  player_angle + (i * (math.pi/4) / (self.amount_of_sensory_lines))
             # Getting the point from the unit circle
-            angle = i * math.pi / (self.amount_of_sensory_lines / 2)
+            x = self.detection_range * math.cos(angle)
+            y = self.detection_range * math.sin(angle)
+            # Moving the point to the correct position compared to center of the enemy(starting point)
+            endpoint_x = starting_position[0] + x
+            endpoint_y = starting_position[1] + y
+            # Adding the lines to the list.
+            self.sensory_lines.append(((starting_position[0], starting_position[1]), (endpoint_x, endpoint_y), self.no_detection_colour))
+
+            # For the negative Angle for the direct line to the player
+            angle =  player_angle - (i * (math.pi/4) / (self.amount_of_sensory_lines))
+            # Getting the point from the unit circle
             x = self.detection_range * math.cos(angle)
             y = self.detection_range * math.sin(angle)
             # Moving the point to the correct position compared to center of the enemy(starting point)

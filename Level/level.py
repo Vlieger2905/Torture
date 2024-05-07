@@ -41,7 +41,7 @@ class Level:
         self.visible_sprites.add(self.player)
 
         #Creating the enemies in the level
-        self.load_enemies(self.json_file)
+        self.load_enemies(self.json_file, self.player)
 
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
@@ -66,7 +66,7 @@ class Level:
         return matching_files[0]
 
 # TODO 
-    def load_enemies(self, json_file):
+    def load_enemies(self, json_file, player):
         # Reading the data from the json file
         with open(json_file, 'r') as file:
             data = json.load(file)
@@ -76,7 +76,7 @@ class Level:
             party_leader = enemy["leader"]
             party_members = enemy.get("party_members", "")
             position = (enemy["position"]["x"], enemy["position"]["y"])
-            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file))
+            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file, player))
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()

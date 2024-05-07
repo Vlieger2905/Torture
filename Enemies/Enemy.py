@@ -178,7 +178,7 @@ class Enemy(Sprite):
     # A function updates the vision of the enemy and returns if is sees anything special
     def looking_around(self,player):
         # Updating the position of the sensory lines
-        self.update_line_positions()
+        self.update_line_positions(player)
         # Putting the limit of each sensory line to the start of a obstacle
         self.obstacle_detection()
         
@@ -195,12 +195,26 @@ class Enemy(Sprite):
         return math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
 
     # Function to update the position of the lines
-    def update_line_positions(self):
+    def update_line_positions(self, player):
         starting_position = self.rect.center
         self.sensory_lines = []
-        for i in range(self.amount_of_sensory_lines):
+        player_angle = math.atan2(( player.rect.centery- starting_position[1]),(player.rect.centerx - starting_position[0]))
+        # Calculate coordinates for each endpoint
+        for i in range(int(self.amount_of_sensory_lines/2)):
+            # For the positive angle for the direct line to the player
             # Getting the point from the unit circle
-            angle = i * math.pi / (self.amount_of_sensory_lines / 2)
+            angle = player_angle + (i * (math.pi/4)/ (self.amount_of_sensory_lines/2))
+            x = self.detection_range * math.cos(angle)
+            y = self.detection_range * math.sin(angle)
+            # Moving the point to the correct position compared to center of the enemy(starting point)
+            endpoint_x = starting_position[0] + x
+            endpoint_y = starting_position[1] + y
+            # Adding the lines to the list.
+            self.sensory_lines.append(((starting_position[0], starting_position[1]), (endpoint_x, endpoint_y), self.no_detection_colour))
+
+            # For the negative Angle for the direct line to the player
+            angle =  player_angle - (i * (math.pi/4) / (self.amount_of_sensory_lines/2))
+            # Getting the point from the unit circle
             x = self.detection_range * math.cos(angle)
             y = self.detection_range * math.sin(angle)
             # Moving the point to the correct position compared to center of the enemy(starting point)
