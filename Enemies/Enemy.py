@@ -60,8 +60,7 @@ class Enemy(Sprite):
             # Check for vertical colission
             self.collision_walls('vertical')
         # Aligning the rect of the enemy to the hitbox of the enemy
-        self.rect.center = self.hitbox.center
-        
+        self.rect.center = self.hitbox.center     
 
     # Pathfinding
     def pathfinding(self, player):

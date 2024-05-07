@@ -31,9 +31,9 @@ class CameraGroup(pygame.sprite.Group):
 
 #Testing function only
 #See the sensory lines of the enemy type
-        #     if hasattr(sprite, 'sensory_lines'):
-        #         # Draw sensory lines
-        #         for line in sprite.sensory_lines:
-        #             start_point = (line[0][0] - self.offset.x, line[0][1] - self.offset.y)
-        #             end_point = (line[1][0] - self.offset.x, line[1][1] - self.offset.y)
-        #             pygame.draw.line(self.display_surface, line[2], start_point, end_point, 2)
+            if hasattr(sprite, 'sensory_lines'):
+                # Draw sensory lines
+                for line in sprite.sensory_lines:
+                    start_point = (line[0][0] - self.offset.x, line[0][1] - self.offset.y)
+                    end_point = (line[1][0] - self.offset.x, line[1][1] - self.offset.y)
+                    pygame.draw.line(self.display_surface, line[2], start_point, end_point, 2)
