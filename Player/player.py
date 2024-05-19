@@ -189,6 +189,7 @@ class Player(pygame.sprite.Sprite):
                 if obj.hitbox.colliderect(self.hitbox):
                     return obj.name
 
+    # function to allign the rect with the hitbox
     def aligment(self):
         self.rect.centerx = self.hitbox.centerx
         self.rect.centery = self.hitbox.centery - (self.rect.height * 0.3)

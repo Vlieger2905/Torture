@@ -1,7 +1,7 @@
 import pygame,sys,os, json
 from pygame.sprite import Group
 from Game import settings
-from Game import dt as detalTime
+from Game import dt as deltaTime
 from Game.Menu.pauseMenu import *
 from .tile import *
 from Player import player
@@ -11,6 +11,7 @@ from .loading_tmx_file import *
 from . import load_obj 
 from .load_exit import load_exit
 from Enemies.Party import Enemy_Party
+from .Combat.Scene import *
 
 class Level:
     def __init__(self, level_map, entry_point, player):
@@ -41,8 +42,9 @@ class Level:
         self.visible_sprites.add(self.player)
 
         #Creating the enemies in the level
-        self.load_enemies(self.json_file, self.player)
+        self.load_enemies()
 
+# Function to get all the files in the folder that correspond to the level the current level to load
     def get_files_by_extension(self, folder_path, extensions):
         matching_files = []
 
@@ -65,10 +67,10 @@ class Level:
 
         return matching_files[0]
 
-# TODO 
-    def load_enemies(self, json_file, player):
+# Function to load all the enemies in the map
+    def load_enemies(self):
         # Reading the data from the json file
-        with open(json_file, 'r') as file:
+        with open(self.json_file, 'r') as file:
             data = json.load(file)
         # Loading and saving the information of each enemy in the enemy list for this level
         enemy_list = data.get("enemies", [])
@@ -76,12 +78,19 @@ class Level:
             party_leader = enemy["leader"]
             party_members = enemy.get("party_members", "")
             position = (enemy["position"]["x"], enemy["position"]["y"])
-            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file, player))
+            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file, self.player))  
+
+# Function to check whether the player collides with any enemy
+    def enemy_collision(self):
+        for entity in self.visible_sprites:
+            if hasattr(entity, "type"):
+                if self.player.rect.colliderect(entity.rect):
+                    return entity
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()
         while True:
-            last_time,dt = detalTime.calculate_dt(last_time)
+            last_time,dt = deltaTime.calculate_dt(last_time)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return "quit", self.player
@@ -100,7 +109,6 @@ class Level:
                         # Returning to the main menu
                         elif pauseMenu == "return to main menu":
                             return "main menu", self.player
-
                         else:
                             pass
                     # Open the inventory
@@ -120,6 +128,23 @@ class Level:
             if exit is not None:
                 next_level = load_exit(self.json_file, exit)
                 return next_level, self.player
+            
+            # Check if the player collides with a enemy
+            collided_enemy = self.enemy_collision()
+            # If the player collides with an enemy start the combat scene against that enemy
+            if collided_enemy:
+                print(collided_enemy)
+                # Creating combat scene
+                Scene = Combat_scene(collided_enemy, self.player)
+                # Running the combat scene
+                last_time = Scene.run(clock)
+
+                if last_time == "quit":
+                    return "quit", self.player
+                
+                collided_enemy.kill()
+                
+                
 
             debug(clock.get_fps())
             clock.tick()
