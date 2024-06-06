@@ -24,6 +24,7 @@ class Game:
         # Unpacking the information in the save data to use it
         player_stats = save_data["player_stats"]
         player_items = save_data["player_items"]
+        party_members = save_data["party members"]
 
         # Starting state of the game should be menu to boot up in the main menu.
         self.state = "menu"
@@ -37,7 +38,7 @@ class Game:
         self.item_list = creating_items()
 
         # player information and creation
-        self.player = player.Player(player_stats,self.item_list, player_items)
+        self.player = player.Player(player_stats,self.item_list, player_items, party_members)
 
     def Run(self):
         while True:

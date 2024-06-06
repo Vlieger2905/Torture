@@ -2,7 +2,7 @@ import pygame
 import sys
 
 class Button():
-    def __init__(self, position,output, image=None, text=None,size = None, font=None, colour=None):
+    def __init__(self, position,output, image=None, text=None,size = None, font=None, colour=None, combat = None):
         self.rect = pygame.Rect(position, (0, 0))
         self.image = image
         self.text = text
@@ -14,7 +14,11 @@ class Button():
             if size is not None:
                 self.image = pygame.transform.scale(self.image, size)
             self.rect.size = self.image.get_size()   
-        self.rect.topleft = position
+        # For the combat the location represents the bottom right of the sprite
+        if combat:
+            self.rect.bottomright = position
+        else:
+            self.rect.topleft = position
 
     def draw(self, screen):
         if self.image is not None:

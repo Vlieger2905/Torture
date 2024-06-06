@@ -2,10 +2,11 @@ import pygame, math
 from Game import settings
 from .modifiers import *
 from .Inventory import Inventory
+from Player.Ally.Ally import Ally
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
-    def __init__(self, stats, item_list, player_items):
+    def __init__(self, stats, item_list, player_items, party_members):
         super().__init__()
         # super().__init__(groups)
         self.image = pygame.image.load('Sprites\\Player\\Village boy #1.png').convert_alpha()
@@ -26,6 +27,11 @@ class Player(pygame.sprite.Sprite):
         self.first_frame = True
         # Defining the player inventory
         self.inventory = Inventory(item_list, player_items)
+
+        # Loading the party members of the player
+        self.party_members = []
+        for name in party_members:
+            self.party_members.append(Ally(name))
         
     # loading the stats of the charachter into the playerclass
         
@@ -130,6 +136,13 @@ class Player(pygame.sprite.Sprite):
     }
 
         return items
+    # Retreiving the party members to save them
+    def get_members(self):
+        members = []
+        for member in self.party_members:
+            members.append(member.name)
+        return members
+    
     # Getting the input for the player movement
     def input(self):
         keys = pygame.key.get_pressed()

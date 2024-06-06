@@ -1,0 +1,47 @@
+{
+        "forest":{
+            "background":"Sprites//Combat//Background//Combat scene Interface.png",
+            "friendly location": {
+                "1": "75,300",
+                "2": "150,300",
+                "3": "225,300",
+                "4": "300,300"
+            },
+            "enemy location": {
+                "1": "340,300",
+                "2": "415,300",
+                "3": "490,300",
+                "4": "565,300"
+            }
+        },
+        "desert":{
+            "background":"different location",
+            "friendly location": {
+                "1": "100,100",
+                "2": "200,100",
+                "3": "300,100",
+                "4": "400,100"
+            },
+            "enemy location": {
+                "1": "100,100",
+                "2": "200,100",
+                "3": "300,100",
+                "4": "400,100"
+            }
+        },
+        "different location":{
+            "background":"Sprites//Combat//Background//Combat scene Interface.png",
+            "friendly location": {
+                "1": "100,100",
+                "2": "200,100",
+                "3": "300,100",
+                "4": "400,100"
+            },
+            "enemy location": {
+                "1": "100,100",
+                "2": "200,100",
+                "3": "300,100",
+                "4": "400,100"
+            }
+        }
+}

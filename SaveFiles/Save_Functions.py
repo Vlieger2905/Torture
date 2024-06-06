@@ -9,7 +9,8 @@ def collecting_data(player, game):
         "player_stats" : player.get_stats(),
         "player_items" : player.get_items(),
         "current level": game.load_map,
-        "spawnpoint" : game.entry_point
+        "spawnpoint" : game.entry_point,
+        "party members" : player.get_members()
     }
     return save_data
 

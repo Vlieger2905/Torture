@@ -1,0 +1,12 @@
+{
+    "test":{
+        "image": "Sprites//DEV resources//SpriteTest.png",
+        "level": 1,
+        "skills": "stab"
+    },
+    "lucas":{
+        "image": "Sprites//DEV resources//SpriteTest.png",
+        "level": 1,
+        "skills": "stab"
+    }
+}

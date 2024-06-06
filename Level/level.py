@@ -1,4 +1,4 @@
-import pygame,sys,os, json
+import pygame,sys,os, json, random
 from pygame.sprite import Group
 from Game import settings
 from Game import dt as deltaTime
@@ -33,6 +33,9 @@ class Level:
         load_obj.get_exit(self.tmx_data, self.exit_points)
         # Creating all the tiles in the tmx file Except the background that is a image
         create_tiles(self.tmx_data, [self.visible_sprites, self.obstacle_sprites])
+        
+        # Location for the combat screen to load background and location of characters
+        self.combat_scenes = self.load_combat_scenes(self.json_file)
 
         # Creating player
         entry_point = load_obj.get_spawnpoint(self.tmx_data, entry_point, level_map)
@@ -87,6 +90,13 @@ class Level:
                 if self.player.rect.colliderect(entity.rect):
                     return entity
 
+# Function to Load the different possible combat screens connect to the level
+    def load_combat_scenes(self, json_file):
+        with open(self.json_file, 'r') as file:
+            data = json.load(file)
+        scenes = data["Combat scenes"]
+        return scenes
+
     def run(self, clock):
         last_time = pygame.time.get_ticks()
         while True:
@@ -133,9 +143,8 @@ class Level:
             collided_enemy = self.enemy_collision()
             # If the player collides with an enemy start the combat scene against that enemy
             if collided_enemy:
-                print(collided_enemy)
                 # Creating combat scene
-                Scene = Combat_scene(collided_enemy, self.player)
+                Scene = Combat_scene(collided_enemy, self.player, random.choice(self.combat_scenes))
                 # Running the combat scene
                 last_time = Scene.run(clock)
 
@@ -144,8 +153,6 @@ class Level:
                 
                 collided_enemy.kill()
                 
-                
-
             debug(clock.get_fps())
             clock.tick()
             pygame.display.update()

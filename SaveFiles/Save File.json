@@ -85,5 +85,9 @@
         ]
     },
     "current level": "Map Data\\Test Center",
-    "spawnpoint": "North"
+    "spawnpoint": "North",
+    "party members": [
+        "test",
+        "lucas"
+    ]
 }

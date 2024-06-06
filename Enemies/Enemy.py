@@ -41,8 +41,7 @@ class Enemy(Sprite):
         self.obstacle_sprites = obstacle_sprites
         # Stats
         self.level = level
-        
-        
+          
     # Move the Entity
     def move(self, dt):
         # If the Entity is moving making sure that the velocity stays the same and that the Entity is not moving faster when moving diagonally
