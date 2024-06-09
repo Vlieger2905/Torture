@@ -10,7 +10,7 @@ from .Camera import *
 from .loading_tmx_file import *
 from . import load_obj 
 from .load_exit import load_exit
-from Enemies.Party import Enemy_Party
+from Enemies.Enemy_Party import Enemy_Party
 from .Combat.Scene import *
 
 class Level:
@@ -29,6 +29,8 @@ class Level:
         self.tmx_file = self.get_files_by_extension(level_map, [".tmx"])
         self.tmx_data = load_tmx(self.tmx_file)
         self.json_file = self.get_files_by_extension(level_map , [".json"])
+        with open(self.json_file, "r") as file:
+            self.json_data = json.load(file)
         # Creating the exit points and hitboxes on the map
         load_obj.get_exit(self.tmx_data, self.exit_points)
         # Creating all the tiles in the tmx file Except the background that is a image
@@ -81,7 +83,7 @@ class Level:
             party_leader = enemy["leader"]
             party_members = enemy.get("party_members", "")
             position = (enemy["position"]["x"], enemy["position"]["y"])
-            self.visible_sprites.add(Enemy_Party(position,"Sprites//Enemies//Slime.png", 1, self.obstacle_sprites, self.tmx_file, self.player))  
+            self.visible_sprites.add(Enemy_Party(position, 1, self.obstacle_sprites, self.tmx_file, self.player, party_leader, party_members))  
 
 # Function to check whether the player collides with any enemy
     def enemy_collision(self):

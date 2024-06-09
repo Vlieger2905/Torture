@@ -1,5 +1,6 @@
 import pygame, math, json
 from Game import settings
+from Level.Combat.skills import get_skills
 
 class Ally():
     def __init__(self,name):
@@ -12,8 +13,15 @@ class Ally():
         # Information of this specific Ally
         self.name = name
         self.image = pygame.image.load(self.data["image"]).convert_alpha()
+        # level and stats of the Ally
         self.level = self.data["level"]
-        self.skills = self.data["skills"] 
-        # self.stats
+        self.Might = self.data["Might"]
+        self.Agility = self.data["Agility"]
+        self.Mind = self.data["Mind"]
+        self.Vitality = self.data["Vitality"]
+        self.Fortitude = self.data["Fortitude"]
+
+        # Skills the ally has
+        self.skills = get_skills(self.data["skills"])
 
         

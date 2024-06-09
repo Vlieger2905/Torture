@@ -9,22 +9,25 @@ PixelArt:
     
 
 Programming:
-    Pause Menu
-        Settings
-        Save
     Inventory
         Display item information
     PLayer stats
         Leveling system
     Enemy AI
-        Walk around corners
         Chase longer after the player then just their vision range
+        Idle mechanic
     Enemy spawn
     Save/load (partly finished expand as needed)
     Combat system
+        the actual combat. 
+        Running away
+        Returning health and saving that information in the party
+        
     Npc system
 
 Game ideas:
     Make a list of every time a player died. That saves the location and cause of the death together with the date and time and then at the end of the game there is a monument or graveyard with all of the players attempts
     
 
+# Command to check the amount of lines in the project last check 2,179
+#  powershell -Command "Get-ChildItem -Recurse -Filter *.py | ForEach-Object { $_.FullName; (Get-Content $_.FullName).Count }"

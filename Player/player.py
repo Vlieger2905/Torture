@@ -3,6 +3,7 @@ from Game import settings
 from .modifiers import *
 from .Inventory import Inventory
 from Player.Ally.Ally import Ally
+from Level.Combat.skills import *
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
@@ -72,6 +73,9 @@ class Player(pygame.sprite.Sprite):
         self.Air_proficiency = stats.get("Air_proficiency", 0)
         self.Plants_proficiency = stats.get("Plants_proficiency", 0)
         self.Lightning_proficiency = stats.get("Lightning_proficiency", 0)
+
+        # Skills of the player
+        self.skills = get_skills(stats)
 
     # Spawning the player in a new level
     def spawn(self,spawn_position, obstacle_sprites, exits):
@@ -214,4 +218,6 @@ class Player(pygame.sprite.Sprite):
             self.aligment()
         else:
             self.first_frame = False
-            
+
+
+    

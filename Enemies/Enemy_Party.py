@@ -1,23 +1,25 @@
 import numpy as np
-import math, random, pygame
+import math, random, pygame,json
 from Game.settings import *
 from .Enemy import *
-
+from .Enemy_data import *
 
 class Enemy_Party(Enemy):
-    def __init__(self, position, image, level, obstacle_sprites,tmx_file, player):
-        super().__init__(position, image, level, obstacle_sprites,tmx_file)
-        # Attribute
-        
+    def __init__(self, position, level, obstacle_sprites,tmx_file, player, party_leader, party_members):
+        # Enemies that are inside the party
+        self.party_leader = self.get_enemy(party_leader, level)
+        self.party_members = []
+        image = self.party_leader.image_path
+        for member in party_members:
+            self.party_members.append(self.get_enemy(member,level))
+
+        super().__init__(position, image, level, obstacle_sprites,tmx_file)        
         # Overworld stats
         self.speed = 600
         self.first_frame = True
         self.hitbox = self.hitbox.inflate(-(self.hitbox.width * 0.45),-(self.hitbox.height * 0.45))
         self.hitbox.center = self.rect.center
 
-        # Enemies that are inside the party
-        # TODO
-        
         # Detection lines slime specifc settings        
         self.detection_range = 600
         self.amount_of_sensory_lines = 8
@@ -50,6 +52,14 @@ class Enemy_Party(Enemy):
             endpoint_y = starting_position[1] + y
             # Adding the lines to the list.
             self.sensory_lines.append(((starting_position[0], starting_position[1]), (endpoint_x, endpoint_y), self.no_detection_colour))
+
+    # Function to get the correct storage class to put into the party leader and party members
+    def get_enemy(self, name, level):
+        if name == "slime":
+            return Slime(level)
+        if name == "skeleton":
+            return Skeleton(level)
+        
 
     def update(self,dt, player):
     # If it is not the first frame after the level loaded update the state of the slime

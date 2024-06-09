@@ -24,7 +24,8 @@
     "enemies": [
       {
         "leader": "slime",
-        "party_members" : "slime",
+        "leader level": 1,
+        "party_members" : ["slime", "slime", "slime"],
         "position": {
           "x": 6978,
           "y": 1814
@@ -33,16 +34,7 @@
       },
       {
         "leader": "slime",
-        "party_members" : "slime",
-        "position": {
-          "x": 6478,
-          "y": 1814
-        }
-        
-      },
-      {
-        "leader": "skeleton",
-        "party_members" : "skeleton",
+        "party_members" : ["skeleton"],
         "position": {
           "x": 5978,
           "y": 1814

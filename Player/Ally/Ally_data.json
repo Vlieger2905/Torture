@@ -1,12 +1,27 @@
 {
     "test":{
-        "image": "Sprites//DEV resources//SpriteTest.png",
+        "image": "Sprites//Player//Village boy #1.png",
+        
         "level": 1,
-        "skills": "stab"
+        "Might": 3,
+        "Agility": 3,
+        "Mind": 10,
+        "Vitality": 9,
+        "Fortitude": 2,
+        
+        "skills": "strike"
     },
     "lucas":{
-        "image": "Sprites//DEV resources//SpriteTest.png",
+        "image": "Sprites//DEV resources//Lucas.jpg",
+        
         "level": 1,
-        "skills": "stab"
+        "Might": 3,
+        "Agility": 6,
+        "Mind": 10,
+        "Vitality": 9,
+        "Fortitude": 2,
+
+        "skills": "strike"
+        
     }
 }
