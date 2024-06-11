@@ -7,7 +7,7 @@ from Level.Combat.skills import *
 
 class Player(pygame.sprite.Sprite):
 # Initializing the player
-    def __init__(self, stats, item_list, player_items, party_members):
+    def __init__(self, stats, item_list, player_items, party_members, player_skills):
         super().__init__()
         # super().__init__(groups)
         self.image = pygame.image.load('Sprites\\Player\\Village boy #1.png').convert_alpha()
@@ -74,8 +74,20 @@ class Player(pygame.sprite.Sprite):
         self.Plants_proficiency = stats.get("Plants_proficiency", 0)
         self.Lightning_proficiency = stats.get("Lightning_proficiency", 0)
 
+        # Maximum value the player has at the moment for the combat
+        self.max_health = self.Vitality * math.sqrt(self.Vitality) + 20
+        self.max_stamina = math.sqrt(self.Vitality) + 5
+        self.max_mana = math.sqrt(self.Mind) + 5
+        self.max_sanity = math.sqrt(self.Fortitude)
+
+        # Current value the player has
+        self.health_points = self.max_health
+        self.stamina_points = self.max_stamina
+        self.mana_points = self.max_mana
+        self.sanity = self.max_sanity
+
         # Skills of the player
-        self.skills = get_skills(stats)
+        self.skills = get_skills(player_skills)
 
     # Spawning the player in a new level
     def spawn(self,spawn_position, obstacle_sprites, exits):

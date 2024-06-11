@@ -84,8 +84,12 @@
             ""
         ]
     },
-    "player skills": [],
+    "player skills": [
+        "strike"
+    ],
     "current level": "Map Data\\Test Center",
     "spawnpoint": "North",
-    "party members": []
+    "party members": [
+        "lucas"
+    ]
 }

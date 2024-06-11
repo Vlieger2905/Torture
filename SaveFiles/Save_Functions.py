@@ -1,5 +1,5 @@
 import json
-from Level.Combat.skills import get_skills
+from Level.Combat.skills import return_skills
 
 
 # Collecting all the data and formatting that for use.
@@ -9,7 +9,7 @@ def collecting_data(player, game):
         # Getting the player stats
         "player_stats" : player.get_stats(),
         "player_items" : player.get_items(),
-        "player skills": get_skills(player.skills),
+        "player skills": return_skills(player.skills),
         "current level": game.load_map,
         "spawnpoint" : game.entry_point,
         "party members" : player.get_members()
