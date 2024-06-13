@@ -12,9 +12,14 @@ play_button = Button.Button((100, 100),"play", play_image, None, (200, 100))
 quit_button = Button.Button((100, 200),"quit", quit_image, None, (200, 100))
 # List that stores all the buttons
 buttons = [play_button,quit_button]
+
+# Initiating music made possible by ward
+# mixer = pygame.mixer.Sound("")
+
 # Running the menu
 def mainMenu(screen):
     while True:
+        # mixer.playe()
         pygame_events = pygame.event.get()
         screen.fill((255,255,255))
         for button in buttons:

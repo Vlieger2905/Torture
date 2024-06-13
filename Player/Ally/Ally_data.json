@@ -9,7 +9,18 @@
         "Vitality": 9,
         "Fortitude": 2,
         
-        "skills": "strike"
+        "skills": ["strike"],
+
+        "equipement" : {
+            "headwear": "",
+            "chestplate": "",
+            "pants": "",
+            "boots": "",
+            "necklace": "",
+            "ring": "",
+            "left hand": "",
+            "right hand": "Iron Sword"
+        }
     },
     "lucas":{
         "image": "Sprites//DEV resources//Lucas.jpg",
@@ -21,7 +32,18 @@
         "Vitality": 9,
         "Fortitude": 2,
 
-        "skills": "strike"
+        "skills": ["strike"],
+
+        "equipement" : {
+            "headwear": "",
+            "chestplate": "",
+            "pants": "",
+            "boots": "",
+            "necklace": "",
+            "ring": "",
+            "left hand": "",
+            "right hand": "Iron Sword"
+        }
         
     }
 }

@@ -1,8 +1,11 @@
-import pygame, json
+import pygame, json, random
 import Game.dt as deltaTime
 from debug import *
 from Game import settings
 from Game.Classes import Button
+from .skills import calculate_accuracy, damage_calculation
+from Player.Ally import Ally
+from Player.player import Player
 
 
 class Combat_scene():
@@ -85,6 +88,7 @@ class Combat_scene():
 
         # General purpose variables
         self.selected_entity = None
+        self.selected_skill = None
         self.current_turn_character = self.characters[0]
 
     # Function to place the buttons in the correct space and be centered 
@@ -153,9 +157,17 @@ class Combat_scene():
 
     # Function to keep track of whose turn it is and loop through the characters in combat
     def turn_tracker(self):
+        # Cycle to the next character
         self.characters.append(self.characters[0])
         self.characters.pop(0)
+        # Resetting the variables
+        self.selected_entity = None
+        self.selected_skill = None
 
+    # Check whether the attack hits based on the Hitchance
+    def hit_check(self,hit_chance):
+        hit_roll = random.randint(0,100)
+        return hit_roll < hit_chance
 
     def run(self, clock):
         last_time = pygame.time.get_ticks()
@@ -182,37 +194,73 @@ class Combat_scene():
 
             # Get current turn
             self.current_turn_character = self.characters[0]
-            # Drawing all the buttons for the actions of the current character
-            self.draw_action_buttons(self.current_turn_character.skills)
-            # Drawing the stats of the current character, health mana stamina
-            self.draw_health_mana_stamina(self.current_turn_character)
+            # Draw if it is a player character. If it has type it is a enemy and it should not be drawn
+            if not (hasattr(self.current_turn_character, "type")):
+                # Drawing all the buttons for the actions of the current character
+                self.draw_action_buttons(self.current_turn_character.skills)
+                #  If you selected an enemy draw the status of the current turn character
+                if hasattr(self.selected_entity, "type"):
+                    # Drawing the stats of the current character, health mana stamina
+                    self.draw_health_mana_stamina(self.current_turn_character)
+                # If you selected a character different than the current character in your team. display their information
+                elif not hasattr(self.selected_entity, "type") and self.selected_entity != None :
+                    self.draw_health_mana_stamina(self.selected_entity)
 
-            # Checking the action buttons
-            button_event =Button.check_events(self.current_turn_character.skills, pygame_events)
-            if button_event == None: 
-                # Checking whether enemies or allies have been selected to change the target of the action
-                button_event = Button.check_events(self.friendly_buttons, pygame_events)
-                if button_event == None:
-                    button_event = Button.check_events(self.enemy_buttons, pygame_events)
+                else:
+                    # Drawing the stats of the current character, health mana stamina
+                    self.draw_health_mana_stamina(self.current_turn_character)
 
-            if button_event != None:
-                self.selected_entity = button_event
-                print(self.selected_entity)
+                # Checking the action buttons to see if a skill is being selected. ONLY IF IT IS A PLAYER CONTROLLED CHARACTER
+                skill_button_event =Button.check_events(self.current_turn_character.skills, pygame_events)
+            # When it is the turn of the enemy there is no skill_button_event
+            else:
+                skill_button_event = None
+
+            # Checking whether enemies or allies have been selected to change the target of the action
+            character_select_event = Button.check_events(self.friendly_buttons, pygame_events)
+            if character_select_event == None:
+                character_select_event = Button.check_events(self.enemy_buttons, pygame_events)
+
+            #Selecting the pressed character as the target 
+            if character_select_event != None:
+                self.selected_entity = character_select_event
+                # print(self.selected_entity)
+            # Selecting the pressed skill as the selected skill
+            if skill_button_event != None:
+                self.selected_skill = skill_button_event
+                # print(self.selected_skill)
 
 
-            # Drawing the turn tracker( whose turn it is and the order of who is going to be next on top of the screen)
+            # TODO Drawing the turn tracker( whose turn it is and the order of who is going to be next on top of the screen)
 
 
             # Actual combat
+            if self.selected_entity and self.selected_skill:
+                # Check if a friendly character is selected
+                if isinstance(self.selected_entity, Ally.Ally) or isinstance(self.selected_entity, Player ):
+                    # If a friendly character is selected deselect it
+                    self.selected_entity = None
+                
+                # If an enemy is selected deal damage
+                else:
+                    self.selected_entity.health_points
+                    # Calc accuracy between current character and target. Also calculate if it hits
+                    hit_chance = calculate_accuracy(self.current_turn_character, self.selected_entity, self.selected_skill)
+                    # Bool outcome if the current character hit there target
+                    outcome = self.hit_check(round(hit_chance))
 
-                # if it is a player character display the possible skill to choose from
-                # Get target
-                # Calc accuracy between current character and target. Also calculate if it hits
-                # If it hits calculate the damage done
-                # Substract the damage from the enemy
-                # Substract cost for the skill/action from the character
-                # Status effects
-                # Continue to the next turn 
+                    # If outcome is true it calculates the damage
+                    if outcome:
+                        # If it hits calculate the damage done
+                        true_damage = damage_calculation(self.current_turn_character, self.selected_entity, self.selected_skill)
+                        # Substract the damage from the enemy
+                        self.selected_entity.health_points -= true_damage
+                    # Substract cost for the skill/action from the character
+                    # Status effects
+                    
+                    # Continue to the next turn 
+                    self.turn_tracker()
+
 
 
 

@@ -47,12 +47,12 @@ class Inventory:
             self.ring = it.create_item(self.ring)
         self.ring_position = (180,320)
         # Left hand
-        self.left_hand = loaded_items.get("left_hand", "")
+        self.left_hand = loaded_items.get("left hand", "")
         if self.left_hand != "":
             self.left_hand = it.create_item(self.left_hand)
         self.left_hand_position = (180,416)
         # Right hand
-        self.right_hand = loaded_items.get("right_hand", "")
+        self.right_hand = loaded_items.get("right hand", "")
         if self.right_hand != "":
             self.right_hand = it.create_item(self.right_hand)
         self.right_hand_position = (180,512)
@@ -112,10 +112,10 @@ class Inventory:
         self.equipment_buttons.append(Inventory_button.Equipement_Button(self.ring_position, "ring", ring_image))
 
         left_hand_image = self.left_hand.image if hasattr(self.left_hand, 'image') else None
-        self.equipment_buttons.append(Inventory_button.Equipement_Button(self.left_hand_position, "left_hand", left_hand_image))
+        self.equipment_buttons.append(Inventory_button.Equipement_Button(self.left_hand_position, "left hand", left_hand_image))
 
         right_hand_image = self.right_hand.image if hasattr(self.right_hand, 'image') else None
-        self.equipment_buttons.append(Inventory_button.Equipement_Button(self.right_hand_position, "right_hand", right_hand_image))
+        self.equipment_buttons.append(Inventory_button.Equipement_Button(self.right_hand_position, "right hand", right_hand_image))
 
     def update(self, clock):
         last_time = pygame.time.get_ticks()
@@ -375,9 +375,9 @@ class Inventory:
                                 self.selected_item = self.necklace
                             if self.equipment_buttons[clicked_index].type == "ring":
                                 self.selected_item = self.ring
-                            if self.equipment_buttons[clicked_index].type == "left_hand":
+                            if self.equipment_buttons[clicked_index].type == "left hand":
                                 self.selected_item = self.left_hand
-                            if self.equipment_buttons[clicked_index].type == "right_hand":
+                            if self.equipment_buttons[clicked_index].type == "right hand":
                                 self.selected_item = self.right_hand
 
                         else: 

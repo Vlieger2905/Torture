@@ -2,7 +2,7 @@
     "player_stats": {
         "level": 1,
         "Might": 14,
-        "Agility": 527,
+        "Agility": 7,
         "Mind": 3,
         "Vitality": 12,
         "Fortitude": 6,
@@ -34,13 +34,13 @@
         "boots": "",
         "necklace": "",
         "ring": "",
-        "left_hand": "",
-        "right_hand": "",
+        "left hand": "",
+        "right hand": "Iron Sword",
         "inventory_items": [
+            "",
             "Iron Sword",
             "Rusty Helmet",
             "Iron Sword",
-            "",
             "",
             "",
             "",
@@ -85,6 +85,8 @@
         ]
     },
     "player skills": [
+        "strike",
+        "strike",
         "strike"
     ],
     "current level": "Map Data\\Test Center",

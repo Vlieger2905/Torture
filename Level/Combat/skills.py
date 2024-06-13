@@ -2,21 +2,92 @@ import pygame, math
 from Game.Classes import Button
 import Game.settings
 
-# TODO
-def calculate_accuracy(self, player, target, skill):
+# Function to calculate the accuracy of a action the current character does
+def calculate_accuracy(current_character, target, skill):
     # Getting the difference in agility
-    agility_outcome = player.Agility - target.Agility
-    # Getting the hit chance based on the skill used and the stats of the player and the enemy
+    agility_outcome = current_character.Agility - target.Agility
+    # Getting the hit chance based on the skill used and the stats of the current_character and the enemy
     if agility_outcome >= 0:  
-        Hit = skill.accuracy + math.sqrt(agility_outcome)
+        Hit = skill.base_accuracy + math.sqrt(agility_outcome)
     if agility_outcome < 0:
-        Hit = skill.accuracy - math.sqrt(abs(agility_outcome))
+        Hit = skill.base_accuracy - math.sqrt(abs(agility_outcome))
     
+    current_character_status_effect = 0
+    target_status_effect = 0
+    # Calculating the modifiers and % effect of the status 
+    for status in current_character.status:
+        current_character_status_effect += status.accuracy_modifier
+    for status in target.status:
+        target_status_effect += status.accuracy_modifier
+
+    # Calculating the total effect of the player equipement on the accuracy
+    equipement_bonus = 0
+    target_equipement = 0
+    for equipement in current_character.equipement:
+        if equipement != "":
+            equipement_bonus += equipement.accuracy_modifier
+    # Calculate the effect the target equipement has on the accuracy
+    for equipement in target.equipement:
+        if equipement != "":
+            target_equipement += equipement.accuracy_modifier
+
+
     # Calculating the actual accuracy
-    accuracy = Hit + player.status + player.equipement - target.status - target.equipement
+    accuracy = Hit + current_character_status_effect + equipement_bonus - target_status_effect - target_equipement
+
+    if accuracy < 0:
+        accuracy = 0
+    if accuracy > 100:
+        accuracy = 100
 
     return accuracy
 
+# Function to calculate the damage a attack of a skill would do
+def damage_calculation(current_character, target, skill):
+    if hasattr(current_character, "inventory"):
+        # Getting base damage and modifiers
+        weapon = current_character.inventory.right_hand
+        weapon_damage = weapon.base_damage
+    if hasattr(current_character, "right_hand"):
+        weapon_damage = current_character.right_hand.base_damage
+    
+    # Getting the modifier of the skill
+    skill_modifier = skill.damage_modifier
+
+    # Getting the bonus amount based on the skill used and the stats of the player
+    if skill.modifier_type == "Might":
+        bonus_damage = current_character.Might * skill.modifier_amount
+    if skill.modifier_type == "Agility":
+        bonus_damage = current_character.Agility * skill.modifier_amount
+    if skill.modifier_type == "Mind":
+        bonus_damage = current_character.Mind * skill.modifier_amount
+    if skill.modifier_type == "Vitality":
+        bonus_damage = current_character.Vitality * skill.modifier_amount    
+    if skill.modifier_type == "Fortitude":
+        bonus_damage = current_character.Fortitude * skill.modifier_amount
+
+    
+    # Calculating the modifiers and % effect of the status 
+    current_character_status_effect = 1
+    target_status_effect = 1
+    for status in current_character.status:
+        current_character_status_effect += status.accuracy_modifier
+    for status in target.status:
+        target_status_effect += status.accuracy_modifier
+
+    # Calculate the effect the target equipement has on the accuracy
+    target_resistance = 0
+    for equipement in target.equipement:
+        if equipement != "":
+            pass
+            # target_resistance += equipement.resistance
+    target_resistance += target.resistance
+# Total damage that would be dealt after all effect
+    total_damage= (((weapon_damage * skill_modifier) * current_character_status_effect) + bonus_damage) * target_resistance
+
+    return total_damage
+
+# Function to provide a list of all the skill names for saving purposes
 def return_skills(character_skills):
     list = []
     for skill in character_skills:
@@ -24,7 +95,7 @@ def return_skills(character_skills):
 
     return list
 
-
+# Function to create skills based on the skill list provided by the save file
 def get_skills(skill_list):
     initiated_skill_list = []
     for skill in skill_list:
@@ -69,9 +140,12 @@ class Skill_button():
 class Strike(Skill_button):
     def __init__(self):
         # Combat stats
-        self.base_damage = 10
-        self.base_accuracy = 70
-        self.modifier = "Might"
+        self.damage_modifier = 1
+        self.base_accuracy = 100
+        # Stat the skill gets more damage with
+        self.modifier_type = "Might"
+        # Percentage amount of increase based on the stat. So if might is 100 and modifier is 0.5 you get 50% extra damage
+        self.modifier_amount = 0
 
         # Other variables
         self.name = "strike"

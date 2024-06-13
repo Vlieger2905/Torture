@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         self.first_frame = True
         # Defining the player inventory
         self.inventory = Inventory(item_list, player_items)
-
+        self.equipement = [self.inventory.boots, self.inventory.headwear, self.inventory.chestplate, self.inventory.pants, self.inventory.left_hand, self.inventory.right_hand, self.inventory.ring, self.inventory.necklace]
         # Loading the party members of the player
         self.party_members = []
         for name in party_members:
@@ -81,10 +81,14 @@ class Player(pygame.sprite.Sprite):
         self.max_sanity = math.sqrt(self.Fortitude)
 
         # Current value the player has
-        self.health_points = self.max_health
+        self.health_points = self.max_health/2
         self.stamina_points = self.max_stamina
         self.mana_points = self.max_mana
         self.sanity = self.max_sanity
+        # Damage absorption
+        self.resistance = 1
+
+        self.status = []
 
         # Skills of the player
         self.skills = get_skills(player_skills)
@@ -146,8 +150,8 @@ class Player(pygame.sprite.Sprite):
         "boots": self.inventory.boots.name if self.inventory.boots else "",
         "necklace": self.inventory.necklace.name if self.inventory.necklace else "",
         "ring": self.inventory.ring.name if self.inventory.ring else "",
-        "left_hand": self.inventory.left_hand.name if self.inventory.left_hand else "",
-        "right_hand": self.inventory.right_hand.name if self.inventory.right_hand else "",
+        "left hand": self.inventory.left_hand.name if self.inventory.left_hand else "",
+        "right hand": self.inventory.right_hand.name if self.inventory.right_hand else "",
         "inventory_items" : [item.name if item else "" for item in self.inventory.inventory_items]
     }
 
@@ -158,7 +162,6 @@ class Player(pygame.sprite.Sprite):
         for member in self.party_members:
             members.append(member.name)
         return members
-    
     # Getting the input for the player movement
     def input(self):
         keys = pygame.key.get_pressed()

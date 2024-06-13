@@ -27,9 +27,15 @@ class Example():
             self.stamina_points = self.max_stamina
             self.mana_points = self.max_mana
             self.sanity = self.max_sanity
+            # damage resistance. 1 = no absorption. A lower numbers means less damage taken
+            self.resistance = 1
+            self.status = []
 
             # Skills of the Enemy
             self.skills = []
+
+            #  Equipement of the enemy
+            self.equipement = [""]
             
 class Slime():
     def __init__(self, level) -> None:
@@ -58,9 +64,17 @@ class Slime():
         self.stamina_points = self.max_stamina
         self.mana_points = self.max_mana
         self.sanity = self.max_sanity
+        # Damage absorption 1 = no absorption. A lower numbers means less damage taken
+        self.resistance = 0.6
+
+
+        self.status = []
 
         # Skills of the Enemy
         self.skills = []
+
+        #  Equipement of the enemy
+        self.equipement = [""]
 
 class Skeleton():
     def __init__(self, level) -> None:
@@ -88,8 +102,18 @@ class Skeleton():
         self.stamina_points = self.max_stamina
         self.mana_points = self.max_mana
         self.sanity = self.max_sanity
+        # Damage absorption 1 = no absorption. A lower numbers means less damage taken
+        self.resistance = 1
+
+
+        self.status = []
         
         # Skills of the enemy
         self.skills = []
+
+        #  Equipement of the enemy
+        self.equipement = [""]
+
+        
 
         

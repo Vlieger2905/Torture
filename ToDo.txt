@@ -18,16 +18,18 @@ Programming:
         Idle mechanic
     Enemy spawn
     Save/load (partly finished expand as needed)
+        Save information of the party members
+        save information of the current stats for combat eg. current health mana stamina and sanity
     Combat system
         the actual combat. 
         Running away
-        Returning health and saving that information in the party
         
     Npc system
+        Everything
 
 Game ideas:
     Make a list of every time a player died. That saves the location and cause of the death together with the date and time and then at the end of the game there is a monument or graveyard with all of the players attempts
     
 
-# Command to check the amount of lines in the project last check 2,179
+# Command to check the amount of lines in the project last check 2615
 #  powershell -Command "Get-ChildItem -Recurse -Filter *.py | ForEach-Object { $_.FullName; (Get-Content $_.FullName).Count }"
