@@ -179,12 +179,6 @@ class Combat_scene():
             # TODO scale the small health bar to the width of the character
             self.display_surface.blit(self.small_health_image, button.rect.bottomleft)
             
-
-
-            
-
-
-
     # Function to keep track of whose turn it is and loop through the characters in combat
     def turn_tracker(self):
         # Cycle to the next character
