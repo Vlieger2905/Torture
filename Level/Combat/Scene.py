@@ -1,4 +1,6 @@
 import pygame, json, random
+
+import pygame.draw_py
 import Game.dt as deltaTime
 from debug import *
 from Game import settings
@@ -6,6 +8,7 @@ from Game.Classes import Button
 from .skills import calculate_accuracy, damage_calculation
 from Player.Ally import Ally
 from Player.player import Player
+
 
 
 class Combat_scene():
@@ -45,9 +48,9 @@ class Combat_scene():
         
         # Loading the player party and corresponding images
         self.player = player_party
-        scale = 2
+        self.scale = 2
         self.party_members = player_party.party_members
-        self.player_image = pygame.transform.scale(self.player.image,(self.player.image.get_height() * scale,self.player.image.get_width() * scale))
+        self.player_image = pygame.transform.scale(self.player.image,(self.player.image.get_height() * self.scale,self.player.image.get_width() * self.scale))
         
         # Creating the buttons for the friendly side to select
         # Draw the main character in the first slot
@@ -90,6 +93,13 @@ class Combat_scene():
         self.selected_entity = None
         self.selected_skill = None
         self.current_turn_character = self.characters[0]
+
+        # Small health information
+        # Information to draw the small health bar for each character
+        self.small_health_image = pygame.image.load("Sprites//Combat//Interface//small health bar.png")
+        
+
+        self.small_health_rect = self.small_health_image.get_rect()
 
     # Function to place the buttons in the correct space and be centered 
     def draw_action_buttons(self, skills):
@@ -154,6 +164,26 @@ class Combat_scene():
         mana_rect = pygame.rect.Rect(12,96,width,24)
         mana_colour = (95,205,228)
         pygame.draw.rect(self.display_surface, mana_colour, mana_rect)
+
+    # Function to draw a small health bar under every character
+    def draw_small_health(self, button_character_list):
+        for button in button_character_list:
+            character = button.output
+            health_colour = (217,87,99)
+            #  Variable to scale how full the health bar should be
+            percentill_health = character.health_points / character.max_health
+            small_health_bar_rect = pygame.rect.Rect((button.rect.bottomleft), (self.small_health_image.get_width()*percentill_health, self.small_health_image.get_height()))
+            
+            pygame.draw.rect(self.display_surface, health_colour, small_health_bar_rect)
+            
+            # TODO scale the small health bar to the width of the character
+            self.display_surface.blit(self.small_health_image, button.rect.bottomleft)
+            
+
+
+            
+
+
 
     # Function to keep track of whose turn it is and loop through the characters in combat
     def turn_tracker(self):
@@ -233,33 +263,55 @@ class Combat_scene():
 
             # TODO Drawing the turn tracker( whose turn it is and the order of who is going to be next on top of the screen)
 
+            # Drawing small health bars under each entity in the combat. 
+            self.draw_small_health(self.friendly_buttons + self.enemy_buttons)
+
+            # Drawing who the current character 
+            for button in self.friendly_buttons + self.enemy_buttons:
+                if button.output == self.current_turn_character:
+                    pygame.draw.rect(self.display_surface, (255,255,255), button.rect, width= 5)
+            
+            # Draw a green rect around the selected skill
+            if self.selected_skill:
+                pygame.draw.rect(self.display_surface, (0,255,0), self.selected_skill, width= 5)
+            
+            # Draw a red rect around the target that has been selected
+            if self.selected_entity:
+                for button in self.enemy_buttons + self.friendly_buttons:
+                    if button.output == self.selected_entity:
+                        pygame.draw.rect(self.display_surface, (255,0,0), button.rect, width= 5)
+
+
 
             # Actual combat
-            if self.selected_entity and self.selected_skill:
-                # Check if a friendly character is selected
-                if isinstance(self.selected_entity, Ally.Ally) or isinstance(self.selected_entity, Player ):
-                    # If a friendly character is selected deselect it
-                    self.selected_entity = None
-                
-                # If an enemy is selected deal damage
-                else:
-                    self.selected_entity.health_points
-                    # Calc accuracy between current character and target. Also calculate if it hits
-                    hit_chance = calculate_accuracy(self.current_turn_character, self.selected_entity, self.selected_skill)
-                    # Bool outcome if the current character hit there target
-                    outcome = self.hit_check(round(hit_chance))
-
-                    # If outcome is true it calculates the damage
-                    if outcome:
-                        # If it hits calculate the damage done
-                        true_damage = damage_calculation(self.current_turn_character, self.selected_entity, self.selected_skill)
-                        # Substract the damage from the enemy
-                        self.selected_entity.health_points -= true_damage
-                    # Substract cost for the skill/action from the character
-                    # Status effects
+            # If the current character is a player controlled character check if the player has selected anything
+            if isinstance(self.current_turn_character, Ally.Ally) or isinstance(self.current_turn_character, Player):
+                if self.selected_entity and self.selected_skill:
+                    # Check if a friendly character is selected
+                    if isinstance(self.selected_entity, Ally.Ally) or isinstance(self.selected_entity, Player):
+                        # If a friendly character is selected deselect it
+                        self.selected_entity = None
                     
-                    # Continue to the next turn 
-                    self.turn_tracker()
+                    # If an enemy is selected deal damage
+                    else:
+                        self.selected_entity.health_points
+                        # Calc accuracy between current character and target. Also calculate if it hits
+                        hit_chance = calculate_accuracy(self.current_turn_character, self.selected_entity, self.selected_skill)
+                        # Bool outcome if the current character hit there target
+                        outcome = self.hit_check(round(hit_chance))
+
+                        # If outcome is true it calculates the damage
+                        if outcome:
+                            # If it hits calculate the damage done
+                            true_damage = damage_calculation(self.current_turn_character, self.selected_entity, self.selected_skill)
+                            # Substract the damage from the enemy
+                            self.selected_entity.health_points -= true_damage
+
+                        #TODO Substract cost for the skill/action from the character
+                        #TODO Status effects
+                        
+                        # Continue to the next turn 
+                        self.turn_tracker()
 
 
 
